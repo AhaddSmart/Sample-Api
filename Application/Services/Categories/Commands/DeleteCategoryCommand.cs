@@ -1,23 +1,16 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Interfaces;
-using Application.Common.Mappings;
-using Application.DTOs.CategoryDtos;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using AutoMapper;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services.Categories.Commands
 {
-    public class DeleteCategoryCommand : IRequest<bool>
+    public class DeleteCategoryCommand : IRequest<ResponseHelper>
     {
         public int Id { get; set; }
     }
 
-    public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, bool>
+    public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand, ResponseHelper>
     {
 
         private readonly IApplicationDbContext _context;
@@ -28,26 +21,32 @@ namespace Application.Services.Categories.Commands
             _context = context;
             _mapper = mapper;
         }
-        public async Task<bool> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Categories.FindAsync(request.Id);
+            try
+            {
+                var entity = await _context.Categories.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException("Category entity not found");
-            }
+                if (entity == null)
+                {
+                    return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "Category not found"));
+                }
 
-            if (entity.ParentCategoryId != null)
-            {
-                throw new NotFoundException("Category have child Category");
+                if (entity.ParentCategoryId != null)
+                {
+                    return new ResponseHelper(0, new object(), new ErrorDef(0, "400", "Category have child Category"));
+                }
+                else
+                {
+                    _context.Categories.Remove(entity);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    return new ResponseHelper(1, true, new ErrorDef(0, string.Empty, string.Empty));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _context.Categories.Remove(entity);
-                await _context.SaveChangesAsync(cancellationToken);
-                return true;
+                return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
             }
-            return false;
         }
     }
 }

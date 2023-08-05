@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Models;
 using Application.DTOs.NewsDtos;
 using Application.Services.News.Commands;
 using Application.Services.News.Queries;
@@ -12,25 +13,24 @@ namespace WebAPI.Controllers
     {
         [HttpGet]
         [Route("v1/[controller]")]
-        public async Task<IEnumerable<NewsDto>> Get()
+        public async Task<ResponseHelper> Get()
         {
             return await Mediator.Send(new GetNewsQuery());
         }
         [HttpGet]
         [Route("v1/[controller]/{Id}")]
-        public async Task<NewsDto> GetNewsById(int Id)
+        public async Task<ResponseHelper> GetNewsById(int Id)
         {
-            //return await Mediator.Send(new GetNewsByIdQuery());
             return await Mediator.Send(new GetNewsByIdQuery { Id = Id });
         }
         [HttpPost]
         [Route("v1/[controller]")]
-        public async Task<NewsDto> Create(CreateNewsCommand command)
+        public async Task<ResponseHelper> Create(CreateNewsCommand command)
         {
             return await Mediator.Send(command);
         }
         [HttpPut("v1/[controller]/{id}")]
-        public async Task<NewsDto> Update(int id, UpdateNewsCommand command)
+        public async Task<ResponseHelper> Update(int id, UpdateNewsCommand command)
         {
             if (id != command.Id)
             {
@@ -42,7 +42,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("v1/[controller]/{id}")]
-        public async Task<bool> Delete(int id, DeleteNewsCommand command)
+        public async Task<ResponseHelper> Delete(int id, DeleteNewsCommand command)
         {
             if (id != command.Id)
             {

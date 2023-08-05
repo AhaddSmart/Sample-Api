@@ -1,17 +1,19 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.DTOs;
 using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Primitives;
 
 namespace Application.Services.About.Commands
 {
-    public class DeleteAboutCommand : IRequest<bool>
+    public class DeleteAboutCommand : IRequest<ResponseHelper>
     {
-        public int Id { get; set; } // Assuming you have an Id property to identify the About entity to delete
+        public int Id { get; set; }
     }
 
-    public class DeleteAboutCommandHandler : IRequestHandler<DeleteAboutCommand, bool>
+    public class DeleteAboutCommandHandler : IRequestHandler<DeleteAboutCommand, ResponseHelper>
     {
      
         private readonly IApplicationDbContext _context;
@@ -22,24 +24,26 @@ namespace Application.Services.About.Commands
             _context = context;
             _mapper = mapper;
         }
-        public async Task<bool> Handle(DeleteAboutCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(DeleteAboutCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Abouts.FindAsync(request.Id);
-
-            if (entity == null)
+            try
             {
-                // Handle the case where the About entity with the given Id is not found.
-                // You can throw an exception or return an error response.
-                throw new NotFoundException("About entity not found.");
+                var entity = await _context.Abouts.FindAsync(request.Id);
+
+                if (entity == null)
+                {
+                    return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "About not found"));
+
+                }
+                _context.Abouts.Remove(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new ResponseHelper(1, true, new ErrorDef(0, string.Empty, string.Empty));
+            } 
+            catch(Exception ex)
+            {
+                return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
             }
-
-            // Update the properties of the About entity
-
-            _context.Abouts.Remove(entity);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            //return _mapper.Map<AboutDto>(entity);
-            return true;
         }
     }
 }

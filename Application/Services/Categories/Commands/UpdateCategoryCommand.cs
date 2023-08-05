@@ -1,5 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.DTOs.CategoryDtos;
 using Application.DTOs.NewsDtos;
 using AutoMapper;
@@ -13,7 +14,7 @@ using System.Xml.Linq;
 
 namespace Application.Services.Categories.Commands;
 
-public class UpdateCategoryCommand : IRequest<CategoryDto>
+public class UpdateCategoryCommand : IRequest<ResponseHelper>
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -22,7 +23,7 @@ public class UpdateCategoryCommand : IRequest<CategoryDto>
     public int? ParentCategoryId { get; set; }
 }
 
-public class UpdateNewsCommandHandler : IRequestHandler<UpdateCategoryCommand, CategoryDto>
+public class UpdateNewsCommandHandler : IRequestHandler<UpdateCategoryCommand, ResponseHelper>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -33,22 +34,31 @@ public class UpdateNewsCommandHandler : IRequestHandler<UpdateCategoryCommand, C
         _mapper = mapper;
     }
 
-    public async Task<CategoryDto> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<ResponseHelper> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Categories.FindAsync(request.Id);
-
-        if (entity == null)
+        try
         {
-            throw new NotFoundException("Category entity not found.");
+
+            var entity = await _context.Categories.FindAsync(request.Id);
+
+            if (entity == null)
+            {
+                return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "Category not found"));
+            }
+
+            entity.Name = request.Name;
+            entity.Code = request.Code;
+            entity.IsActive = request.IsActive;
+            entity.ParentCategoryId = request.ParentCategoryId;
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var result = _mapper.Map<CategoryDto>(entity);
+            return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
         }
-
-        entity.Name = request.Name;
-        entity.Code = request.Code;
-        entity.IsActive = request.IsActive;
-        entity.ParentCategoryId = request.ParentCategoryId;
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return _mapper.Map<CategoryDto>(entity);
+        catch (Exception ex)
+        {
+            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+        }
     }
 }

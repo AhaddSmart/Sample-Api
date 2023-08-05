@@ -1,11 +1,12 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.DTOs.NewsDtos;
 using AutoMapper;
 using MediatR;
 
 namespace Application.Services.News.Commands
 {
-    public class CreateNewsCommand : IRequest<NewsDto>
+    public class CreateNewsCommand : IRequest<ResponseHelper>
     {
         public DateTime NewsDate { get; set; }
         public string Title { get; set; }
@@ -16,7 +17,7 @@ namespace Application.Services.News.Commands
 
     }
 
-    public class CreateNewsCommandHandler : IRequestHandler<CreateNewsCommand, NewsDto>
+    public class CreateNewsCommandHandler : IRequestHandler<CreateNewsCommand, ResponseHelper>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -27,23 +28,33 @@ namespace Application.Services.News.Commands
             _mapper = mapper;
         }
 
-        public async Task<NewsDto> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(CreateNewsCommand request, CancellationToken cancellationToken)
         {
-            var entity = new Domain.Entities.News
+            try
             {
-                NewsDate = request.NewsDate,
-                Title = request.Title,
-                FileRepoId = request.FileRepoId,
-                NewsContent = request.NewsContent,
-                ValidFrom = request.ValidFrom,
-                ValidTill = request.ValidTill
-            };
 
-            await _context.News.AddAsync(entity, cancellationToken);
+                var entity = new Domain.Entities.News
+                {
+                    NewsDate = request.NewsDate,
+                    Title = request.Title,
+                    FileRepoId = request.FileRepoId,
+                    NewsContent = request.NewsContent,
+                    ValidFrom = request.ValidFrom,
+                    ValidTill = request.ValidTill
+                };
 
-            await _context.SaveChangesAsync(cancellationToken);
+                await _context.News.AddAsync(entity, cancellationToken);
 
-            return _mapper.Map<NewsDto>(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var result =  _mapper.Map<NewsDto>(entity);
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+            }
         }
     }
 }

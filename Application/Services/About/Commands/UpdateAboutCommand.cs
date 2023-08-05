@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.DTOs;
 using AutoMapper;
 using Domain.Entities.Sample;
@@ -12,13 +13,13 @@ using MediatR;
 
 namespace Application.Services.About.Commands
 {
-    public class UpdateAboutCommand : IRequest<AboutDto>
+    public class UpdateAboutCommand : IRequest<ResponseHelper>
     {
         public int Id { get; set; } // Assuming you have an Id property to identify the About entity
         public string Text { get; set; }
     }
 
-    public class UpdateAboutCommandHandler : IRequestHandler<UpdateAboutCommand, AboutDto>
+    public class UpdateAboutCommandHandler : IRequestHandler<UpdateAboutCommand, ResponseHelper>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -29,23 +30,28 @@ namespace Application.Services.About.Commands
             _mapper = mapper;
         }
 
-        public async Task<AboutDto> Handle(UpdateAboutCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(UpdateAboutCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Abouts.FindAsync(request.Id);
-
-            if (entity == null)
+            try
             {
-                // Handle the case where the About entity with the given Id is not found.
-                // You can throw an exception or return an error response.
-                throw new NotFoundException("About entity not found.");
+                var entity = await _context.Abouts.FindAsync(request.Id);
+
+                if (entity == null)
+                {
+                    return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "About not found"));
+                }
+
+                entity.Text = request.Text;
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var result = _mapper.Map<AboutDto>(entity);
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
             }
-
-            // Update the properties of the About entity
-            entity.Text = request.Text;
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return _mapper.Map<AboutDto>(entity);
+            catch (Exception ex)
+            {
+                return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+            }
         }
     }
 }

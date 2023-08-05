@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Models;
 using Application.DTOs;
 using Application.DTOs.CategoryDtos;
 using Application.DTOs.NewsDtos;
@@ -14,33 +15,33 @@ public class CategoryController : ApiControllerBase
 {
     [HttpGet]
     [Route("v1/[controller]")]
-    public async Task<IEnumerable<CategoryDto>> Get()
+    public async Task<ResponseHelper> Get()
     {
         return await Mediator.Send(new GetCategoryQuery());
     }
 
     [HttpGet]
     [Route("v1/[controller]/{Id}")]
-    public async Task<CategoryDto> GetCategoryById(int Id)
+    public async Task<ResponseHelper> GetCategoryById(int Id)
     {
         return await Mediator.Send(new GetCategoryByIdQuery { Id = Id });
     }
     [HttpGet]
-    [Route("v1/[controller]/child/{ParentCategoryId}")]
-    public async Task<List<CategoryDto>> GetCategoryByParentId(int ParentCategoryId)
+    [Route("v1/[controller]/parent/{Id}")]
+    public async Task<ResponseHelper> GetCategoryByParentId(int Id)
     {
-        return await Mediator.Send(new GetCategoryByParentIdQuery { ParentCategoryId = ParentCategoryId });
+        return await Mediator.Send(new GetCategoryByParentIdQuery { ParentCategoryId = Id });
     }
 
     [HttpPost]
     [Route("v1/[controller]")]
-    public async Task<CategoryDto> Create(CreateCategoryCommand command)
+    public async Task<ResponseHelper> Create(CreateCategoryCommand command)
     {
         return await Mediator.Send(command);
     }
 
     [HttpPut("v1/[controller]/{id}")]
-    public async Task<CategoryDto> Update(int id, UpdateCategoryCommand command)
+    public async Task<ResponseHelper> Update(int id, UpdateCategoryCommand command)
     {
         if (id != command.Id)
         {
@@ -50,7 +51,7 @@ public class CategoryController : ApiControllerBase
     }
 
     [HttpDelete("v1/[controller]/{id}")]
-    public async Task<bool> Delete(int id, DeleteCategoryCommand command)
+    public async Task<ResponseHelper> Delete(int id, DeleteCategoryCommand command)
     {
         if (id != command.Id)
         {

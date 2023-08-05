@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Mappings;
+using Application.Common.Models;
 using Application.DTOs;
 using Application.DTOs.NewsDtos;
 using AutoMapper;
@@ -13,37 +14,11 @@ using System.Threading.Tasks;
 
 namespace Application.Services.News.Queries;
 
-public class GetNewsByIdQuery : IRequest<NewsDto>
+public class GetNewsByIdQuery : IRequest<ResponseHelper>
 {
     public int Id { get; set; }
 }
-//public class GetNewsByIdQueryHandler : IRequestHandler<GetNewsByIdQuery, IEnumerable<NewsDto>>
-//{
-//    private readonly IApplicationDbContext _context;
-//    private readonly IMapper _mapper;
-
-//    public GetNewsByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
-//    {
-//        _context = context;
-//        _mapper = mapper;
-//    }
-
-//    public async Task<IEnumerable<NewsDto>> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
-//    {
-//        var entity = await _context.News.FindAsync(request.Id);
-
-//        if (entity == null)
-//        {
-//            throw new NotFoundException("News entity not found.");
-//        }
-//        return (IEnumerable<NewsDto>)entity;
-//       // return await _context.News
-//             //.ProjectToListAsync<NewsDto>(_mapper.ConfigurationProvider);
-
-//    }
-
-//}
-public class GetNewsByIdQueryHandler : IRequestHandler<GetNewsByIdQuery, NewsDto>
+public class GetNewsByIdQueryHandler : IRequestHandler<GetNewsByIdQuery, ResponseHelper>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -54,15 +29,23 @@ public class GetNewsByIdQueryHandler : IRequestHandler<GetNewsByIdQuery, NewsDto
         _mapper = mapper;
     }
 
-    public async Task<NewsDto> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseHelper> Handle(GetNewsByIdQuery request, CancellationToken cancellationToken)
     {
-        var entity = await _context.News.FindAsync(request.Id);
-
-        if (entity == null)
+        try
         {
-            return null; // Return null if the news item with the specified ID is not found.
-        }
+            var entity = await _context.News.FindAsync(request.Id);
 
-        return _mapper.Map<NewsDto>(entity);
+            if (entity == null)
+            {
+                return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "News not found"));
+            }
+
+            var result = _mapper.Map<NewsDto>(entity);
+            return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
+        }
+        catch (Exception ex)
+        {
+            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+        }
     }
 }

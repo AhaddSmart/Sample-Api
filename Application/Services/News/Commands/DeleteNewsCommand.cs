@@ -1,5 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using AutoMapper;
 using MediatR;
 using System;
@@ -10,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace Application.Services.News.Commands
 {
-    public class DeleteNewsCommand : IRequest<bool>
+    public class DeleteNewsCommand : IRequest<ResponseHelper>
     {
         public int Id { get; set; } 
     }
 
-    public class DeleteNewsCommandHandler : IRequestHandler<DeleteNewsCommand, bool>
+    public class DeleteNewsCommandHandler : IRequestHandler<DeleteNewsCommand, ResponseHelper>
     {
 
         private readonly IApplicationDbContext _context;
@@ -26,20 +27,28 @@ namespace Application.Services.News.Commands
             _context = context;
             _mapper = mapper;
         }
-        public async Task<bool> Handle(DeleteNewsCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(DeleteNewsCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.News.FindAsync(request.Id);
-
-            if (entity == null)
+            try
             {
-                throw new NotFoundException("News entity not found.");
+                var entity = await _context.News.FindAsync(request.Id);
+
+                if (entity == null)
+                {
+                    return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "News not found"));
+                }
+
+
+                _context.News.Remove(entity);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return new ResponseHelper(1, true, new ErrorDef(0, string.Empty, string.Empty));
+
             }
-
-
-            _context.News.Remove(entity);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return true;
+            catch (Exception ex)
+            {
+                return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+            }
         }
     }
 }

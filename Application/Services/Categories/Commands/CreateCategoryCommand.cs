@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.DTOs.CategoryDtos;
 using Application.DTOs.NewsDtos;
 using Application.Services.News.Commands;
@@ -13,7 +14,7 @@ using System.Xml.Linq;
 
 namespace Application.Services.Categories.Commands
 {
-    public class CreateCategoryCommand : IRequest<CategoryDto>
+    public class CreateCategoryCommand : IRequest<ResponseHelper>
     {
         public string Name { get; set; }
         public string Code { get; set; }
@@ -21,7 +22,7 @@ namespace Application.Services.Categories.Commands
         public int? ParentCategoryId { get; set; } = null;
 
     }
-    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, CategoryDto>
+    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, ResponseHelper>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -32,8 +33,10 @@ namespace Application.Services.Categories.Commands
             _mapper = mapper;
         }
 
-        public async Task<CategoryDto> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
         {
+            try
+            {
                 var entity = new Domain.Entities.Category
                 {
                     Name = request.Name,
@@ -42,11 +45,17 @@ namespace Application.Services.Categories.Commands
                     ParentCategoryId = request.ParentCategoryId,
 
                 };
-            await _context.Categories.AddAsync(entity, cancellationToken);
+                await _context.Categories.AddAsync(entity, cancellationToken);
 
-            await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
+                var result = _mapper.Map<CategoryDto>(entity);
 
-            return _mapper.Map<CategoryDto>(entity);
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
+            }
+            catch (Exception ex)
+            {
+                return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+            }
         }
     }
 }

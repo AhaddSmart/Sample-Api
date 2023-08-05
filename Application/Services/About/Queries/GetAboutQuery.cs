@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Mappings;
+using Application.Common.Models;
 using Application.DTOs;
 using AutoMapper;
 using MediatR;
@@ -11,10 +12,10 @@ using System.Threading.Tasks;
 
 namespace Application.Services.About.Queries;
 
-public class GetAboutQuery : IRequest<IEnumerable<AboutDto>>
+public class GetAboutQuery : IRequest<ResponseHelper>
 {
 }
-public class GetAboutQueryHandler : IRequestHandler<GetAboutQuery, IEnumerable<AboutDto>>
+public class GetAboutQueryHandler : IRequestHandler<GetAboutQuery, ResponseHelper>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -25,10 +26,20 @@ public class GetAboutQueryHandler : IRequestHandler<GetAboutQuery, IEnumerable<A
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<AboutDto>> Handle(GetAboutQuery request, CancellationToken cancellationToken)
+    public async Task<ResponseHelper> Handle(GetAboutQuery request, CancellationToken cancellationToken)
     {
-        return await _context.Abouts
-             .ProjectToListAsync<AboutDto>(_mapper.ConfigurationProvider);
+        try
+        {
+            var result = await _context.Abouts
+                 .ProjectToListAsync<AboutDto>(_mapper.ConfigurationProvider);
+
+            return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
+
+        }
+        catch (Exception ex)
+        {
+            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+        }
 
     }
 

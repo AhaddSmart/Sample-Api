@@ -10,6 +10,8 @@ namespace Application.Common.Interfaces
         DbSet<About> Abouts { get; }
         DbSet<News> News { get; }
         DbSet<Category> Categories{ get; }
+        DbSet<FileRepo> FileRepos { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.DTOs;
 using AutoMapper;
 using Domain.Entities.Sample;
@@ -6,13 +7,13 @@ using MediatR;
 
 namespace Application.Services.About.Commands
 {
-    public class CreateAboutCommand : IRequest<AboutDto>
+    public class CreateAboutCommand : IRequest<ResponseHelper>
     {
         public string? Text { get; set; }
 
     }
 
-    public class CreateAboutCommandHandler : IRequestHandler<CreateAboutCommand, AboutDto>
+    public class CreateAboutCommandHandler : IRequestHandler<CreateAboutCommand, ResponseHelper>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -23,18 +24,28 @@ namespace Application.Services.About.Commands
             _mapper = mapper;
         }
 
-        public async Task<AboutDto> Handle(CreateAboutCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(CreateAboutCommand request, CancellationToken cancellationToken)
         {
-            var entity = new Domain.Entities.Sample.About
+            try
             {
-                Text = request.Text
-            };
+                var entity = new Domain.Entities.Sample.About
+                {
+                    Text = request.Text
+                };
 
-            await _context.Abouts.AddAsync(entity, cancellationToken);
+                await _context.Abouts.AddAsync(entity, cancellationToken);
 
-            await _context.SaveChangesAsync(cancellationToken);
+                await _context.SaveChangesAsync(cancellationToken);
 
-            return _mapper.Map<AboutDto>(entity);
+                var result = _mapper.Map<AboutDto>(entity);
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
+
+            }
+            catch (Exception ex)
+            {
+                return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", ex.Message, @"error"));
+
+            }
         }
     }
 }
