@@ -1,0 +1,55 @@
+﻿using Application.Common.Exceptions;
+using Application.DTOs.NewsDtos;
+using Application.Services.News.Commands;
+using Application.Services.News.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using WebUI.Controllers;
+
+namespace WebAPI.Controllers
+{
+    public class NewsController : ApiControllerBase
+    {
+        [HttpGet]
+        [Route("v1/[controller]")]
+        public async Task<IEnumerable<NewsDto>> Get()
+        {
+            return await Mediator.Send(new GetNewsQuery());
+        }
+        [HttpGet]
+        [Route("v1/[controller]/{Id}")]
+        public async Task<NewsDto> GetNewsById(int Id)
+        {
+            //return await Mediator.Send(new GetNewsByIdQuery());
+            return await Mediator.Send(new GetNewsByIdQuery { Id = Id });
+        }
+        [HttpPost]
+        [Route("v1/[controller]")]
+        public async Task<NewsDto> Create(CreateNewsCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+        [HttpPut("v1/[controller]/{id}")]
+        public async Task<NewsDto> Update(int id, UpdateNewsCommand command)
+        {
+            if (id != command.Id)
+            {
+                throw new NotFoundException("News entity not found."); ;
+            }
+
+            return await Mediator.Send(command);
+
+        }
+
+        [HttpDelete("v1/[controller]/{id}")]
+        public async Task<bool> Delete(int id, DeleteNewsCommand command)
+        {
+            if (id != command.Id)
+            {
+                throw new NotFoundException("News entity not found.");
+            }
+            return await Mediator.Send(command);
+
+        }
+    }
+}

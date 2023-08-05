@@ -1,2 +1,1 @@
-# Sample-Api
-practice api
+# DotNetCore6_BlankProject
