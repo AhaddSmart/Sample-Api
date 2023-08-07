@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -131,7 +132,12 @@ app.UseCors(builder => builder
 .AllowAnyMethod()
 .AllowAnyHeader());
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources/uploads")),
+    RequestPath = new PathString("/Resources/uploads")
+});
 app.UseRouting();
 //app.UseAuthentication();
 //app.UseAuthorization();
