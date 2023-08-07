@@ -22,4 +22,6 @@ public class NewsDto : IMapFrom<News>
     {
         profile.CreateMap<News, NewsDto>();
     }
+
+
 }

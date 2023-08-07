@@ -15,7 +15,7 @@ namespace Application.Helpers
         }
 
 
-        public async Task<int> SaveImage(IFormFile? file, string FileName, int Position, FileRepositoryTableRef TableRefernce, int masterCustomerId, int TableRefID, CancellationToken cancellationToken)
+        public async Task<int> SaveImage(IFormFile? file, string FileName, int Position, FileRepositoryTableRef TableRefernce, int TableRefID, CancellationToken cancellationToken)
         {
             string filePath = "";
             if (file != null && file.Length > 0)
