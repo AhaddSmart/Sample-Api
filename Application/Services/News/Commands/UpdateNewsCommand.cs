@@ -56,9 +56,9 @@ namespace Application.Services.News.Commands
                 entity.FileRepoId = objUpdateNewsDto.FileRepoId;
                 entity.NewsContent = objUpdateNewsDto.NewsContent;
                 entity.ValidFrom = objUpdateNewsDto.ValidFrom;
-                entity.ValidTill = objUpdateNewsDto.ValidTill;
+                entity.ValidTill = objUpdateNewsDto.ValidTill;               
 
-                await _context.SaveChangesAsync(cancellationToken);
+                string oldFileName = entity.FileRepo.fileName;
 
                 //file work
 
@@ -66,6 +66,9 @@ namespace Application.Services.News.Commands
 
                 if (!Directory.Exists(uploads))
                     Directory.CreateDirectory(uploads);
+
+                //TODO: Delete from directory here -- oldFileName
+                Directory.Delete(uploads+oldFileName, true);
 
                 ImageRepositoryHelper imageRepositoryHelper = new(_context);
 
@@ -78,15 +81,19 @@ namespace Application.Services.News.Commands
 
                     if (ImageRepoId > 0)
                     {
-                        var ItemData = await _context.News
-                            .FindAsync(new object[] { entity.Id }, cancellationToken);
+                        //var ItemData = await _context.News
+                        //    .FindAsync(new object[] { entity.Id }, cancellationToken);
 
-                        if (ItemData != null)
-                        {
-                            ItemData.FileRepoId = ImageRepoId;
-                        }
+                        //if (ItemData != null)
+                        //{
+                        //    ItemData.FileRepoId = ImageRepoId;
+                        //}
+                        entity.FileRepoId = ImageRepoId;
                     }
                 }
+
+                await _context.SaveChangesAsync(cancellationToken);
+
                 //file work
                 var result = _mapper.Map<UpdateNewsDto>(entity);
                 return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
