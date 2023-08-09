@@ -60,7 +60,9 @@ namespace Application.Helpers
 
             return entity.Id;
         }
-        public async Task<int> UpdateImage(int ImageRepoID, IFormFile? file, string FileName, int Position, string type, FileRepositoryTableRef TableRefernce, int TableRefID, CancellationToken cancellationToken)
+//        public async Task<int> UpdateImage(int ImageRepoID, IFormFile? file, string FileName, int Position, string type, FileRepositoryTableRef TableRefernce, int TableRefID, CancellationToken cancellationToken)
+        public async Task<int> UpdateImage(int ImageRepoID, IFormFile? file, string FileName, int Position, FileRepositoryTableRef TableRefernce, int TableRefID, CancellationToken cancellationToken)
+
         {
             string filePath = "";
             if (file != null && file.Length > 0)
@@ -85,7 +87,8 @@ namespace Application.Helpers
                     ImageRepoData.filePosition = Position;
                     ImageRepoData.TabelRef = TableRefernce;
                     ImageRepoData.tableRefID = TableRefID;
-                    ImageRepoData.type = type;
+                    //ImageRepoData.type = type;
+                    ImageRepoData.type = file.ContentType != null ? file.ContentType : "";
 
                     await _context.SaveChangesAsync(cancellationToken);
 

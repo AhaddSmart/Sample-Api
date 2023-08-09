@@ -36,12 +36,10 @@ namespace Application.Services.News.Commands
 
                 CreateNewsDto objCreateNewsDto = JsonConvert.DeserializeObject<CreateNewsDto>(jsonString);
 
-
                 var entity = new Domain.Entities.News
                 {
                     NewsDate = objCreateNewsDto.NewsDate,
                     Title = objCreateNewsDto.Title,
-                    FileRepoId = objCreateNewsDto.FileRepoId,
                     NewsContent = objCreateNewsDto.NewsContent,
                     ValidFrom = objCreateNewsDto.ValidFrom,
                     ValidTill = objCreateNewsDto.ValidTill
@@ -56,29 +54,29 @@ namespace Application.Services.News.Commands
                 if (!Directory.Exists(uploads))
                     Directory.CreateDirectory(uploads);
 
-                //ImageRepositoryHelper imageRepositoryHelper = new(_context);
+                ImageRepositoryHelper imageRepositoryHelper = new(_context);
 
-                //IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
-                //string fileName = FileRepositoryTableRef.News + "_" + entity.Id;
-                //int Position = 1;
-                //if (File != null)
-                //{
-                //    int ImageRepoId = await imageRepositoryHelper.SaveImage(File, fileName, Position, FileRepositoryTableRef.News, entity.Id, cancellationToken);
+                IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
+                string fileName = FileRepositoryTableRef.News + "_" + entity.Id;
+                int Position = 1;
+                if (File != null)
+                {
+                    int ImageRepoId = await imageRepositoryHelper.SaveImage(File, fileName, Position, FileRepositoryTableRef.News, entity.Id, cancellationToken);
 
-                //    if (ImageRepoId > 0)
-                //    {
-                //        var ItemData = await _context.News
-                //            .FindAsync(new object[] { entity.Id }, cancellationToken);
+                    if (ImageRepoId > 0)
+                    {
+                        var ItemData = await _context.News
+                            .FindAsync(new object[] { entity.Id }, cancellationToken);
 
-                //        if (ItemData != null)
-                //        {
-                //            ItemData.itemImage_FileRepo = ImageRepoId;
-                //        }
-                //    }
-                //}
+                        if (ItemData != null)
+                        {
+                            ItemData.FileRepoId = ImageRepoId;
+                        }
+                    }
+                }
                 await _context.SaveChangesAsync(cancellationToken);
 
-                var result =  _mapper.Map<NewsDto>(entity);
+                var result =  _mapper.Map<CreateNewsDto>(entity);
                 return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
 
             }

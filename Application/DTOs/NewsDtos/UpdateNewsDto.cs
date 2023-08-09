@@ -1,7 +1,5 @@
-﻿using Application.Common.Interfaces;
-using Application.Common.Mappings;
+﻿using Application.Common.Mappings;
 using Domain.Entities;
-using Domain.Entities.Sample;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.NewsDtos;
 
-public class CreateNewsDto : IMapFrom<News>
+public class UpdateNewsDto : IMapFrom<News>
 {
+    public int Id { get; set; }
     public DateTime NewsDate { get; set; }
     public string Title { get; set; }
     public int FileRepoId { get; set; }

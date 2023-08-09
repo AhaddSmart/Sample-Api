@@ -25,20 +25,22 @@ namespace WebAPI.Controllers
         }
         [HttpPost]
         [Route("v1/[controller]")]
-        public async Task<ResponseHelper> Create(CreateNewsCommand command)
+        public async Task<ResponseHelper> Create()
         {
+            CreateNewsCommand command = new ();
+            command.formRequest = Request;
             return await Mediator.Send(command);
         }
-        [HttpPut("v1/[controller]/{id}")]
-        public async Task<ResponseHelper> Update(int id, UpdateNewsCommand command)
+        [HttpPut("v1/[controller]")]
+        public async Task<ResponseHelper> Update(UpdateNewsCommand command)
         {
-            if (id != command.Id)
-            {
-                throw new NotFoundException("News entity not found."); ;
-            }
-
+            //if (id != command.Id)
+            //{
+            //    throw new NotFoundException("News entity not found."); ;
+            //}
+            //UpdateNewsCommand com = new();
+            command.formRequest = Request;
             return await Mediator.Send(command);
-
         }
 
         [HttpDelete("v1/[controller]/{id}")]

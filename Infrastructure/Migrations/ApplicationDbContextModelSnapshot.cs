@@ -133,8 +133,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("FileRepoId")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("FileRepoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
@@ -160,6 +160,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FileRepoId");
 
                     b.ToTable("News");
                 });
@@ -560,6 +562,15 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("ParentCategoryId");
 
                     b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entities.News", b =>
+                {
+                    b.HasOne("Domain.Entities.FileRepo", "FileRepo")
+                        .WithMany()
+                        .HasForeignKey("FileRepoId");
+
+                    b.Navigation("FileRepo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230804114919_AddedInitailMigration")]
-    partial class AddedInitailMigration
+    [Migration("20230809100907_initailEntity")]
+    partial class initailEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,6 +71,58 @@ namespace Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Domain.Entities.FileRepo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("TabelRef")
+                        .HasColumnType("int")
+                        .HasColumnName("TableRef");
+
+                    b.Property<string>("fileName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)")
+                        .HasColumnName("FileName");
+
+                    b.Property<string>("filePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("FilePath");
+
+                    b.Property<int>("filePosition")
+                        .HasColumnType("int")
+                        .HasColumnName("FilePosition");
+
+                    b.Property<int>("tableRefID")
+                        .HasColumnType("int")
+                        .HasColumnName("TableRefID");
+
+                    b.Property<string>("type")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileRepos");
+                });
+
             modelBuilder.Entity("Domain.Entities.News", b =>
                 {
                     b.Property<int>("Id")
@@ -83,8 +135,8 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("FileRepoId")
-                        .HasColumnType("longtext");
+                    b.Property<int?>("FileRepoId")
+                        .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
@@ -110,6 +162,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FileRepoId");
 
                     b.ToTable("News");
                 });
@@ -506,10 +560,19 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
                     b.HasOne("Domain.Entities.Category", "ParentCategory")
-                        .WithMany("ChildCategories")
+                        .WithMany()
                         .HasForeignKey("ParentCategoryId");
 
                     b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entities.News", b =>
+                {
+                    b.HasOne("Domain.Entities.FileRepo", "FileRepo")
+                        .WithMany()
+                        .HasForeignKey("FileRepoId");
+
+                    b.Navigation("FileRepo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -561,11 +624,6 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Entities.Category", b =>
-                {
-                    b.Navigation("ChildCategories");
                 });
 #pragma warning restore 612, 618
         }
