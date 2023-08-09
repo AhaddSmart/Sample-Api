@@ -41,9 +41,9 @@ namespace Application.Services.News.Commands
             {
                 string jsonString = request.formRequest.Form["JsonString"];
 
-                UpdateNewsDto objCreateNewsDto = JsonConvert.DeserializeObject<UpdateNewsDto>(jsonString);
+                UpdateNewsDto objUpdateNewsDto = JsonConvert.DeserializeObject<UpdateNewsDto>(jsonString);
 
-                var entity = await _context.News.FindAsync(objCreateNewsDto.Id);
+                var entity = await _context.News.FindAsync(objUpdateNewsDto.Id);
 
                 if (entity == null)
                 {
@@ -51,12 +51,12 @@ namespace Application.Services.News.Commands
 
                 }
 
-                entity.NewsDate = objCreateNewsDto.NewsDate;
-                entity.Title = objCreateNewsDto.Title;
-                entity.FileRepoId = objCreateNewsDto.FileRepoId;
-                entity.NewsContent = objCreateNewsDto.NewsContent;
-                entity.ValidFrom = objCreateNewsDto.ValidFrom;
-                entity.ValidTill = objCreateNewsDto.ValidTill;
+                entity.NewsDate = objUpdateNewsDto.NewsDate;
+                entity.Title = objUpdateNewsDto.Title;
+                entity.FileRepoId = objUpdateNewsDto.FileRepoId;
+                entity.NewsContent = objUpdateNewsDto.NewsContent;
+                entity.ValidFrom = objUpdateNewsDto.ValidFrom;
+                entity.ValidTill = objUpdateNewsDto.ValidTill;
 
                 await _context.SaveChangesAsync(cancellationToken);
 
@@ -74,7 +74,7 @@ namespace Application.Services.News.Commands
                 int Position = 1;
                 if (File != null)
                 {
-                    int ImageRepoId = await imageRepositoryHelper.UpdateImage(objCreateNewsDto.FileRepoId, File, fileName, Position, FileRepositoryTableRef.News, objCreateNewsDto.Id, cancellationToken);
+                    int ImageRepoId = await imageRepositoryHelper.UpdateImage(objUpdateNewsDto.FileRepoId, File, fileName, Position, FileRepositoryTableRef.News, objCreateNewsDto.Id, cancellationToken);
 
                     if (ImageRepoId > 0)
                     {
@@ -88,13 +88,8 @@ namespace Application.Services.News.Commands
                     }
                 }
                 //file work
-
-
-
-
                 var result = _mapper.Map<UpdateNewsDto>(entity);
                 return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
-
             }
             catch (Exception ex)
             {
