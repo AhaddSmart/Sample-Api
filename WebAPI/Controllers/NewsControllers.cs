@@ -32,13 +32,9 @@ namespace WebAPI.Controllers
             return await Mediator.Send(command);
         }
         [HttpPut("v1/[controller]")]
-        public async Task<ResponseHelper> Update(UpdateNewsCommand command)
+        public async Task<ResponseHelper> Update()
         {
-            //if (id != command.Id)
-            //{
-            //    throw new NotFoundException("News entity not found."); ;
-            //}
-            //UpdateNewsCommand com = new();
+            UpdateNewsCommand command = new();
             command.formRequest = Request;
             return await Mediator.Send(command);
         }

@@ -30,7 +30,7 @@ public class CategoryController : ApiControllerBase
     [Route("v1/[controller]/parent/{Id}")]
     public async Task<ResponseHelper> GetCategoryByParentId(int Id)
     {
-        return await Mediator.Send(new GetCategoryByParentIdQuery { ParentCategoryId = Id });
+        return await Mediator.Send(new GetCategoryByParentIdQuery { parentCategoryId = Id });
     }
 
     [HttpPost]

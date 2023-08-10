@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Helpers;
 using AutoMapper;
 using MediatR;
 using System;
@@ -31,6 +32,7 @@ namespace Application.Services.News.Commands
         {
             try
             {
+                ImageRepositoryHelper imageRepositoryHelper = new(_context);
                 var entity = await _context.News.FindAsync(request.Id);
 
                 if (entity == null)
@@ -38,7 +40,7 @@ namespace Application.Services.News.Commands
                     return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "News not found"));
                 }
 
-
+                await imageRepositoryHelper.DeleteImage(request.Id, cancellationToken);
                 _context.News.Remove(entity);
                 await _context.SaveChangesAsync(cancellationToken);
 

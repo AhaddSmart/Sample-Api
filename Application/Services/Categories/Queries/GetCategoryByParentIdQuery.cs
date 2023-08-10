@@ -14,7 +14,7 @@ namespace Application.Services.Categories.Queries;
 
 public class GetCategoryByParentIdQuery : IRequest<ResponseHelper>
 {
-    public int ParentCategoryId { get; set; }
+    public int parentCategoryId { get; set; }
 }
 public class GetCategoryByParentIdQueryHandler : IRequestHandler<GetCategoryByParentIdQuery, ResponseHelper>
 {
@@ -31,7 +31,7 @@ public class GetCategoryByParentIdQueryHandler : IRequestHandler<GetCategoryByPa
     {
         try
         {
-            var entity = _context.Categories.Where(c => c.ParentCategoryId == request.ParentCategoryId).ToList();
+            var entity = _context.Categories.Where(c => c.parentCategoryId == request.parentCategoryId).ToList();
 
             if (entity == null)
             {

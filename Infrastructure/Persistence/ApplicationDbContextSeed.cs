@@ -34,13 +34,13 @@ public static class ApplicationDbContextSeed
         {
             context.Categories.AddRange(new Category[]
             {
-                new Category { Name = "Berlin", Code="1"},
-                new Category { Name = "Hamburg", Code="2" },
-                new Category { Name = "München", Code="3" },
-                new Category { Name = "Köln", Code="4" },
-                new Category { Name = "Frankfurt am Main", Code="5" },
-                new Category { Name = "Stuttgart" , Code = "6"},
-                new Category { Name = "Düsseldorf" , Code="7"}
+                new Category { name = "Berlin", code="1"},
+                new Category { name = "Hamburg", code="2" },
+                new Category { name = "München", code="3" },
+                new Category { name = "Köln", code="4" },
+                new Category { name = "Frankfurt am Main", code="5" },
+                new Category { name = "Stuttgart" , code = "6"},
+                new Category { name = "Düsseldorf" , code="7"}
             });
 
             await context.SaveChangesAsync();

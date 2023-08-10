@@ -16,10 +16,10 @@ namespace Application.Services.Categories.Commands
 {
     public class CreateCategoryCommand : IRequest<ResponseHelper>
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public bool IsActive { get; set; }
-        public int? ParentCategoryId { get; set; } = null;
+        public string name { get; set; }
+        public string code { get; set; }
+        public bool isActive { get; set; }
+        public int? parentCategoryId { get; set; } = null;
 
     }
     public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, ResponseHelper>
@@ -39,10 +39,10 @@ namespace Application.Services.Categories.Commands
             {
                 var entity = new Domain.Entities.Category
                 {
-                    Name = request.Name,
-                    Code = request.Code,
-                    IsActive = request.IsActive,
-                    ParentCategoryId = request.ParentCategoryId,
+                    name = request.name,
+                    code = request.code,
+                    isActive = request.isActive,
+                    parentCategoryId = request.parentCategoryId,
 
                 };
                 await _context.Categories.AddAsync(entity, cancellationToken);

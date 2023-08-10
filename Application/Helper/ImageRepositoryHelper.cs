@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Application.Helpers
 {
@@ -65,6 +66,7 @@ namespace Application.Helpers
 
         {
             string filePath = "";
+            string oldFileName = "";
             if (file != null && file.Length > 0)
             {
                 //file Saving Code
@@ -82,6 +84,7 @@ namespace Application.Helpers
                    .FindAsync(new object[] { ImageRepoID }, cancellationToken);
                 if (ImageRepoData != null)
                 {
+                    oldFileName = ImageRepoData.filePath;
                     ImageRepoData.fileName = FileName;
                     ImageRepoData.filePath = filePath;
                     ImageRepoData.filePosition = Position;
@@ -90,16 +93,17 @@ namespace Application.Helpers
                     //ImageRepoData.type = type;
                     ImageRepoData.type = file.ContentType != null ? file.ContentType : "";
 
-                    await _context.SaveChangesAsync(cancellationToken);
-
-
-                    if (file != null && file.Length > 0)
+                    if (File.Exists(oldFileName))
                     {
+                        File.Delete(oldFileName);
                         using (Stream fileStream = new FileStream(filePath, FileMode.Create))
                         {
                             await file.CopyToAsync(fileStream);
                         }
                     }
+
+                    await _context.SaveChangesAsync(cancellationToken);
+                   
 
                     return ImageRepoData.Id;
 
@@ -116,15 +120,25 @@ namespace Application.Helpers
             }
         }
 
-        public async Task<bool> DeleteImage(int ImageRepoId, CancellationToken cancellationToken)
+        //public async Task<bool> DeleteImage(int ImageRepoId, CancellationToken cancellationToken)
+        public async Task<bool> DeleteImage(int Id, CancellationToken cancellationToken)
+
         {
             try
             {
+                var EntityData = await _context.News
+                .FindAsync(Id);
                 var objimagerepo = await _context.FileRepos
-                .FindAsync(new object[] { ImageRepoId }, cancellationToken);
+                .FindAsync(new object[] { EntityData.FileRepoId }, cancellationToken);
                 if (objimagerepo != null)
                 {
                     _context.FileRepos.Remove(objimagerepo);
+                   
+                    if (File.Exists(objimagerepo.filePath))
+                    {
+                        File.Delete(objimagerepo.filePath);    
+                    }
+
                     await _context.SaveChangesAsync(cancellationToken);
                     return true;
                 }

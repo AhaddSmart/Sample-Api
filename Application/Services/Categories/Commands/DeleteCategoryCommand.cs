@@ -32,7 +32,7 @@ namespace Application.Services.Categories.Commands
                     return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "Category not found"));
                 }
 
-                if (entity.ParentCategoryId != null)
+                if (entity.parentCategoryId != null)
                 {
                     return new ResponseHelper(0, new object(), new ErrorDef(0, "400", "Category have child Category"));
                 }

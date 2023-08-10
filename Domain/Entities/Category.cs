@@ -9,11 +9,11 @@ namespace Domain.Entities;
 
 public class Category : BaseEntity<int>
 {
-    public string Name { get; set; }
-    public string Code { get; set; }
+    public string name { get; set; }
+    public string code { get; set; }
     //public string? ParentCategory { get; set; }
-    public bool IsActive { get; set; } = true;
-    public int? ParentCategoryId { get; set; }
+    public bool isActive { get; set; } = true;
+    public int? parentCategoryId { get; set; }
     public virtual Category? ParentCategory { get; set; }
 //    public ICollection<Category> ChildCategories { get; private set; } = new List<Category>();
 

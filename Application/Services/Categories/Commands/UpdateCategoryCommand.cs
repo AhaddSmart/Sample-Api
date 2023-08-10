@@ -17,10 +17,10 @@ namespace Application.Services.Categories.Commands;
 public class UpdateCategoryCommand : IRequest<ResponseHelper>
 {
     public int Id { get; set; }
-    public string Name { get; set; }
-    public string Code { get; set; }
-    public bool IsActive { get; set; }
-    public int? ParentCategoryId { get; set; }
+    public string name { get; set; }
+    public string code { get; set; }
+    public bool isActive { get; set; }
+    public int? parentCategoryId { get; set; }
 }
 
 public class UpdateNewsCommandHandler : IRequestHandler<UpdateCategoryCommand, ResponseHelper>
@@ -46,10 +46,10 @@ public class UpdateNewsCommandHandler : IRequestHandler<UpdateCategoryCommand, R
                 return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "Category not found"));
             }
 
-            entity.Name = request.Name;
-            entity.Code = request.Code;
-            entity.IsActive = request.IsActive;
-            entity.ParentCategoryId = request.ParentCategoryId;
+            entity.name = request.name;
+            entity.code = request.code;
+            entity.isActive = request.isActive;
+            entity.parentCategoryId = request.parentCategoryId;
 
             await _context.SaveChangesAsync(cancellationToken);
 
