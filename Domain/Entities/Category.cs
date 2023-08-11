@@ -9,12 +9,14 @@ namespace Domain.Entities;
 
 public class Category : BaseEntity<int>
 {
+    [Column("Name")]
     public string name { get; set; }
+    [Column("Code")]
     public string code { get; set; }
-    //public string? ParentCategory { get; set; }
+    [Column("IsActive")]
     public bool isActive { get; set; } = true;
+    [Column("ParentCategoryId")]
     public int? parentCategoryId { get; set; }
+    [Column("ParentCategory")]
     public virtual Category? ParentCategory { get; set; }
-//    public ICollection<Category> ChildCategories { get; private set; } = new List<Category>();
-
 }

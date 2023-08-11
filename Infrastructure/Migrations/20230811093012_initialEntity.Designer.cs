@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230809100907_initailEntity")]
-    partial class initailEntity
+    [Migration("20230811093012_initialEntity")]
+    partial class initialEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,18 +38,11 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
@@ -57,16 +50,27 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("code")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("Code");
 
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
+                    b.Property<bool>("isActive")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("IsActive");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("Name");
+
+                    b.Property<int?>("parentCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("ParentCategoryId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentCategoryId");
+                    b.HasIndex("parentCategoryId");
 
                     b.ToTable("Categories");
                 });
@@ -135,35 +139,41 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("FileRepoId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("NewsContent")
+                    b.Property<int?>("fileRepoId")
+                        .HasColumnType("int")
+                        .HasColumnName("FileRepoId");
+
+                    b.Property<string>("newsContent")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("NewsContent");
 
-                    b.Property<DateTime>("NewsDate")
-                        .HasColumnType("datetime(6)");
+                    b.Property<DateTime>("newsDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("NewsDate");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("Title");
 
-                    b.Property<DateTime?>("ValidFrom")
-                        .HasColumnType("datetime(6)");
+                    b.Property<DateTime?>("validFrom")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("ValidFrom");
 
-                    b.Property<DateTime?>("ValidTill")
-                        .HasColumnType("datetime(6)");
+                    b.Property<DateTime?>("validTill")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("ValidTill");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileRepoId");
+                    b.HasIndex("fileRepoId");
 
                     b.ToTable("News");
                 });
@@ -186,8 +196,9 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Text")
-                        .HasColumnType("longtext");
+                    b.Property<string>("text")
+                        .HasColumnType("longtext")
+                        .HasColumnName("Text");
 
                     b.HasKey("Id");
 
@@ -561,18 +572,18 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Category", "ParentCategory")
                         .WithMany()
-                        .HasForeignKey("ParentCategoryId");
+                        .HasForeignKey("parentCategoryId");
 
                     b.Navigation("ParentCategory");
                 });
 
             modelBuilder.Entity("Domain.Entities.News", b =>
                 {
-                    b.HasOne("Domain.Entities.FileRepo", "FileRepo")
+                    b.HasOne("Domain.Entities.FileRepo", "fileRepo")
                         .WithMany()
-                        .HasForeignKey("FileRepoId");
+                        .HasForeignKey("fileRepoId");
 
-                    b.Navigation("FileRepo");
+                    b.Navigation("fileRepo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

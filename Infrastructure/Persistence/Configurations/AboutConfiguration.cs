@@ -6,7 +6,7 @@ public class AboutConfiguration
 {
     public void Configure(EntityTypeBuilder<About> builder)
     {
-        builder.Property(x => x.Text)
+        builder.Property(x => x.text)
             .IsRequired();
     }
 }

@@ -38,11 +38,11 @@ namespace Application.Services.News.Commands
 
                 var entity = new Domain.Entities.News
                 {
-                    NewsDate = objCreateNewsDto.NewsDate,
-                    Title = objCreateNewsDto.Title,
-                    NewsContent = objCreateNewsDto.NewsContent,
-                    ValidFrom = objCreateNewsDto.ValidFrom,
-                    ValidTill = objCreateNewsDto.ValidTill
+                    newsDate = objCreateNewsDto.newsDate,
+                    title = objCreateNewsDto.title,
+                    newsContent = objCreateNewsDto.newsContent,
+                    validFrom = objCreateNewsDto.validFrom,
+                    validTill = objCreateNewsDto.validTill
                 };
 
                 await _context.News.AddAsync(entity, cancellationToken);
@@ -70,7 +70,7 @@ namespace Application.Services.News.Commands
 
                         if (ItemData != null)
                         {
-                            ItemData.FileRepoId = ImageRepoId;
+                            ItemData.fileRepoId = ImageRepoId;
                         }
                     }
                 }

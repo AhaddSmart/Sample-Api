@@ -16,7 +16,7 @@ namespace Application.Services.About.Commands
     public class UpdateAboutCommand : IRequest<ResponseHelper>
     {
         public int Id { get; set; } // Assuming you have an Id property to identify the About entity
-        public string Text { get; set; }
+        public string text { get; set; }
     }
 
     public class UpdateAboutCommandHandler : IRequestHandler<UpdateAboutCommand, ResponseHelper>
@@ -41,7 +41,7 @@ namespace Application.Services.About.Commands
                     return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "About not found"));
                 }
 
-                entity.Text = request.Text;
+                entity.text = request.text;
 
                 await _context.SaveChangesAsync(cancellationToken);
 

@@ -129,7 +129,7 @@ namespace Application.Helpers
                 var EntityData = await _context.News
                 .FindAsync(Id);
                 var objimagerepo = await _context.FileRepos
-                .FindAsync(new object[] { EntityData.FileRepoId }, cancellationToken);
+                .FindAsync(new object[] { EntityData.fileRepoId }, cancellationToken);
                 if (objimagerepo != null)
                 {
                     _context.FileRepos.Remove(objimagerepo);

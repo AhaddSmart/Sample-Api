@@ -43,12 +43,12 @@ namespace Application.Services.News.Commands
 
                 }
                
-                entity.NewsDate = objUpdateNewsDto.NewsDate;
-                entity.Title = objUpdateNewsDto.Title;
-                entity.FileRepoId = objUpdateNewsDto.FileRepoId;
-                entity.NewsContent = objUpdateNewsDto.NewsContent;
-                entity.ValidFrom = objUpdateNewsDto.ValidFrom;
-                entity.ValidTill = objUpdateNewsDto.ValidTill;
+                entity.newsDate = objUpdateNewsDto.newsDate;
+                entity.title = objUpdateNewsDto.title;
+                entity.fileRepoId = objUpdateNewsDto.fileRepoId;
+                entity.newsContent = objUpdateNewsDto.newsContent;
+                entity.validFrom = objUpdateNewsDto.validFrom;
+                entity.validTill = objUpdateNewsDto.validTill;
 
                 ImageRepositoryHelper imageRepositoryHelper = new(_context);
 
@@ -57,11 +57,11 @@ namespace Application.Services.News.Commands
                 int Position = 1;
                 if (File != null)
                 {
-                    int ImageRepoId = await imageRepositoryHelper.UpdateImage(objUpdateNewsDto.FileRepoId, File, fileName, Position, FileRepositoryTableRef.News, objUpdateNewsDto.Id, cancellationToken);
+                    int ImageRepoId = await imageRepositoryHelper.UpdateImage(objUpdateNewsDto.fileRepoId, File, fileName, Position, FileRepositoryTableRef.News, objUpdateNewsDto.Id, cancellationToken);
 
                     if (ImageRepoId > 0)
                     {
-                        entity.FileRepoId = ImageRepoId;
+                        entity.fileRepoId = ImageRepoId;
                     }
                 }
 

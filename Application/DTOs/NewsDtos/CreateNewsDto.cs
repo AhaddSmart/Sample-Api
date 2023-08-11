@@ -12,10 +12,10 @@ namespace Application.DTOs.NewsDtos;
 
 public class CreateNewsDto : IMapFrom<News>
 {
-    public DateTime NewsDate { get; set; }
-    public string Title { get; set; }
-    public int FileRepoId { get; set; }
-    public string NewsContent { get; set; }
-    public DateTime ValidFrom { get; set; }
-    public DateTime ValidTill { get; set; }
+    public DateTime newsDate { get; set; }
+    public string title { get; set; }
+    public int fileRepoId { get; set; }
+    public string newsContent { get; set; }
+    public DateTime validFrom { get; set; }
+    public DateTime validTill { get; set; }
 }

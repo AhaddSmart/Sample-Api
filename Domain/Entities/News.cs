@@ -1,15 +1,24 @@
 ﻿
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Domain.Entities;
 public class News : BaseEntity<int>
 {
-    public DateTime NewsDate { get; set; }
-    public string Title { get; set; }
-    public int? FileRepoId { get; set; }
-    public virtual FileRepo? FileRepo { get; set; }
-    public string NewsContent { get; set; }
-    public DateTime? ValidFrom { get; set; }
-    public DateTime? ValidTill { get; set; }
+    [Column("NewsDate")]
+    public DateTime newsDate { get; set; }
+    [Column("Title")]
+    public string title { get; set; }
+    [Column("FileRepoId")]
+    public int? fileRepoId { get; set; }
+    [Column("FileRepo")]
+    public virtual FileRepo? fileRepo { get; set; }
+    [Column("NewsContent")]
+    public string newsContent { get; set; }
+    [Column("ValidFrom")]
+    public DateTime? validFrom { get; set; }
+    [Column("ValidTill")]
+    public DateTime? validTill { get; set; }
 }
 
 

@@ -1,6 +1,9 @@
-﻿namespace Domain.Entities.Sample;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Entities.Sample;
 public class About : BaseEntity<int>
 {
-    public string? Text { get; set; }
+    [Column("Text")]
+    public string? text { get; set; }
 }
 

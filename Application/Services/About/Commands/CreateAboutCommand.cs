@@ -9,7 +9,7 @@ namespace Application.Services.About.Commands
 {
     public class CreateAboutCommand : IRequest<ResponseHelper>
     {
-        public string? Text { get; set; }
+        public string? text { get; set; }
 
     }
 
@@ -30,7 +30,7 @@ namespace Application.Services.About.Commands
             {
                 var entity = new Domain.Entities.Sample.About
                 {
-                    Text = request.Text
+                    text = request.text
                 };
 
                 await _context.Abouts.AddAsync(entity, cancellationToken);
