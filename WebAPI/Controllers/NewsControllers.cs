@@ -1,5 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Models;
+using Application.Common.Security;
 using Application.DTOs.NewsDtos;
 using Application.Services.News.Commands;
 using Application.Services.News.Queries;
@@ -11,6 +12,7 @@ namespace WebAPI.Controllers
 {
     public class NewsController : ApiControllerBase
     {
+        //[Authorize()]
         [HttpGet]
         [Route("v1/[controller]")]
         public async Task<ResponseHelper> Get()

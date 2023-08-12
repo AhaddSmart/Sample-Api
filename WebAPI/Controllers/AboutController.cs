@@ -3,6 +3,7 @@ using Application.Common.Models;
 using Application.DTOs;
 using Application.Services.About.Commands;
 using Application.Services.About.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace WebUI.Controllers;
 //[Authorize]
 public class AboutController : ApiControllerBase
 {
+    [Authorize]
     [HttpGet]
     [Route("v1/[controller]")]
     public async Task<ResponseHelper> Get()

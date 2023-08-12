@@ -11,7 +11,7 @@ public class News : BaseEntity<int>
     public string title { get; set; }
     [Column("FileRepoId")]
     public int? fileRepoId { get; set; }
-    [Column("FileRepo")]
+    
     public virtual FileRepo? fileRepo { get; set; }
     [Column("NewsContent")]
     public string newsContent { get; set; }
