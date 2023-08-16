@@ -195,7 +195,7 @@
 //            return new ResponseHelper(1, new { message = "Role has been Added" }, new ErrorDef(0, " ", ""));
 //        }
 //        else
-//        return new ResponseHelper(0, new { message = "This Role is Already Exist" }, new ErrorDef(0, " ", ""));
+//            return new ResponseHelper(0, new { message = "This Role is Already Exist" }, new ErrorDef(0, " ", ""));
 //    }
 
 
@@ -269,8 +269,8 @@
 //                    user.Role = UserRole[0];
 //                else
 //                    user.Role = "";
-//                if(user.Role != "Administrator")
-//                allUsers.Add(user);
+//                if (user.Role != "Administrator")
+//                    allUsers.Add(user);
 //            }
 //            if (allUsers.Count > 0)
 //            {
@@ -292,7 +292,7 @@
 //    [Route("v1/AssignPermission")]
 //    public async Task<ResponseHelper> AssignPermission(PermissionModel permissionModel)
 //    {
-//        IdentityRole _role =await _roleManager.FindByNameAsync(permissionModel.role);
+//        IdentityRole _role = await _roleManager.FindByNameAsync(permissionModel.role);
 //        if (_role != null)
 //        {
 //            var claims = await _roleManager.GetClaimsAsync(_role);
@@ -302,10 +302,10 @@
 //            }
 //            foreach (var item in permissionModel.Permission)
 //            {
-//                    await _roleManager.AddClaimAsync(_role, new Claim("Permission", item));
+//                await _roleManager.AddClaimAsync(_role, new Claim("Permission", item));
 //            }
 
-//                return new ResponseHelper(1, new { message = "Permission has been Assigned" }, new ErrorDef(0, " ", ""));
+//            return new ResponseHelper(1, new { message = "Permission has been Assigned" }, new ErrorDef(0, " ", ""));
 //        }
 //        else
 //            return new ResponseHelper(0, new { message = "Permission Not Assigned" }, new ErrorDef(0, " ", ""));
@@ -318,12 +318,12 @@
 //    [Route("v1/GetAssignPermission")]
 //    public async Task<ResponseHelper> GetUserAssignPermission(string role)
 //    {
-//        IdentityRole _role =await _roleManager.FindByNameAsync(role);
+//        IdentityRole _role = await _roleManager.FindByNameAsync(role);
 //        if (_role != null)
 //        {
 //            var result = await _roleManager.GetClaimsAsync(_role);
-//            if(result.Count > 0)
-//            return new ResponseHelper(1,result, new ErrorDef(0, " ", ""));
+//            if (result.Count > 0)
+//                return new ResponseHelper(1, result, new ErrorDef(0, " ", ""));
 //            else
 //                return new ResponseHelper(0, new object(), new ErrorDef(0, " ", ""));
 

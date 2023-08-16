@@ -147,7 +147,7 @@
 //app.MapControllers();
 
 //app.Run();
-//------------------------------------------------------------------------------------
+
 using Application;
 using Application.Common.Interfaces;
 //using DinkToPdf;
@@ -157,12 +157,14 @@ using Infrastructure;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using WebAPI.Services.Permission;
 using WebUI.Filters;
 using WebUI.Services;
 
@@ -213,6 +215,9 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
+//builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+//builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 builder.Services.AddHttpContextAccessor();
 

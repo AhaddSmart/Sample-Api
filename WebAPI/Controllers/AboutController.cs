@@ -12,7 +12,7 @@ namespace WebUI.Controllers;
 //[Authorize]
 public class AboutController : ApiControllerBase
 {
-    [Authorize]
+    //[Authorize]
     [HttpGet]
     [Route("v1/[controller]")]
     public async Task<ResponseHelper> Get()

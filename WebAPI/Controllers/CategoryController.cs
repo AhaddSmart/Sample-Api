@@ -1,11 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Models;
-using Application.DTOs;
-using Application.DTOs.CategoryDtos;
-using Application.DTOs.NewsDtos;
 using Application.Services.Categories.Commands;
 using Application.Services.Categories.Queries;
-using Application.Services.News.Commands;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Controllers;
 
