@@ -34,6 +34,10 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<News> News => Set<News>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<FileRepo> FileRepos => Set<FileRepo>();
+    public DbSet<Offer> Offers => Set<Offer>();
+    public DbSet<Banner> Banners => Set<Banner>();
+
+
 
 
 

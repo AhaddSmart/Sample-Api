@@ -40,7 +40,7 @@ namespace Application.Services.News.Commands
                     return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "News not found"));
                 }
 
-                await imageRepositoryHelper.DeleteImage(request.Id, cancellationToken);
+                await imageRepositoryHelper.DeleteImage(entity.fileRepoId.Value, cancellationToken);
                 _context.News.Remove(entity);
                 await _context.SaveChangesAsync(cancellationToken);
 

@@ -1,25 +1,22 @@
 ﻿using Application.Common.Mappings;
 using Domain.Entities;
-using Domain.Entities.Sample;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.NewsDtos;
+namespace Application.DTOs.BannerDto;
 
-public class NewsDto : IMapFrom<News>
+public class BannerDto : IMapFrom<Banner>
 {
     public int Id { get; set; }
-    public DateTime newsDate { get; set; }
     public string title { get; set; }
     public string fileRepoId { get; set; }
-    public string newsContent { get; set; }
-    public DateTime validFrom { get; set; }
-    public DateTime validTill { get; set; }
+    public DateTime? from { get; set; }
+    public DateTime? to { get; set; }
     public void Mapping(MappingProfile profile)
     {
-        profile.CreateMap<News, NewsDto>();
+        profile.CreateMap<Banner, BannerDto>();
     }
 }

@@ -121,15 +121,14 @@ namespace Application.Helpers
         }
 
         //public async Task<bool> DeleteImage(int ImageRepoId, CancellationToken cancellationToken)
-        public async Task<bool> DeleteImage(int Id, CancellationToken cancellationToken)
+        public async Task<bool> DeleteImage(int fileRepoID, CancellationToken cancellationToken)
 
         {
             try
             {
-                var EntityData = await _context.News
-                .FindAsync(Id);
+             
                 var objimagerepo = await _context.FileRepos
-                .FindAsync(new object[] { EntityData.fileRepoId }, cancellationToken);
+                .FindAsync(new object[] { fileRepoID }, cancellationToken);
                 if (objimagerepo != null)
                 {
                     _context.FileRepos.Remove(objimagerepo);
