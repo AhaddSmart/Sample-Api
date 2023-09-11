@@ -37,50 +37,52 @@ public class CreateBannerCommandHandler : IRequestHandler<CreateBannerCommand, R
             string jsonString = request.formRequest.Form["JsonString"];
 
             CreateBannerDto objCreateBannerDto = JsonConvert.DeserializeObject<CreateBannerDto>(jsonString);
-
-            var entity = new Domain.Entities.Banner
+            if (objCreateBannerDto.to > objCreateBannerDto.from)
             {
-                //newsDate = objCreateOfferDto.newsDate,
-                title = objCreateBannerDto.title,
-                //newsContent = objCreateOfferDto.newsContent,
-                from = objCreateBannerDto.from,
-                to = objCreateBannerDto.to,
-            };
-
-            await _context.Banners.AddAsync(entity, cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var uploads = "Resources/uploads/Banners";
-
-            if (!Directory.Exists(uploads))
-                Directory.CreateDirectory(uploads);
-
-            ImageRepositoryHelper imageRepositoryHelper = new(_context);
-
-            IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
-            string fileName = FileRepositoryTableRef.Banners + "_" + entity.Id;
-            int Position = 1; //dout
-            if (File != null)
-            {
-                int ImageRepoId = await imageRepositoryHelper.SaveImage(File, fileName, Position, FileRepositoryTableRef.Banners, entity.Id, cancellationToken);
-
-                if (ImageRepoId > 0)
+                var entity = new Domain.Entities.Banner
                 {
-                    var ItemData = await _context.Banners
-                        .FindAsync(new object[] { entity.Id }, cancellationToken);
+                    //newsDate = objCreateOfferDto.newsDate,
+                    title = objCreateBannerDto.title,
+                    //newsContent = objCreateOfferDto.newsContent,
+                    from = objCreateBannerDto.from,
+                    to = objCreateBannerDto.to,
+                };
 
-                    if (ItemData != null)
+                await _context.Banners.AddAsync(entity, cancellationToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var uploads = "Resources/uploads/Banners";
+
+                if (!Directory.Exists(uploads))
+                    Directory.CreateDirectory(uploads);
+
+                ImageRepositoryHelper imageRepositoryHelper = new(_context);
+
+                IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
+                string fileName = FileRepositoryTableRef.Banners + "_" + entity.Id;
+                int Position = 1; //dout
+                if (File != null)
+                {
+                    int ImageRepoId = await imageRepositoryHelper.SaveImage(File, fileName, Position, FileRepositoryTableRef.Banners, entity.Id, cancellationToken);
+
+                    if (ImageRepoId > 0)
                     {
-                        ItemData.fileRepoId = ImageRepoId;
+                        var ItemData = await _context.Banners
+                            .FindAsync(new object[] { entity.Id }, cancellationToken);
+
+                        if (ItemData != null)
+                        {
+                            ItemData.fileRepoId = ImageRepoId;
+                        }
                     }
                 }
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var result = _mapper.Map<CreateBannerDto>(entity);
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
             }
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var result = _mapper.Map<CreateBannerDto>(entity);
-            return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
-
+            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "to date must greater then from date", @"error"));
         }
         catch (Exception ex)
         {

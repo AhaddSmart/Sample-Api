@@ -104,7 +104,7 @@
 //        var context = services.GetRequiredService<ApplicationDbContext>();
 //        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 //        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-//        //add-migration AddedAboutEntity
+//        //add-migration AtitddedAboutEny
 //        //context.Database.Migrate();
 //        //update-database;
 //        await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager, roleManager);

@@ -32,10 +32,14 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<City> Cities => Set<City>();
     public DbSet<About> Abouts => Set<About>();
     public DbSet<News> News => Set<News>();
-    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<BusinessCategory> Categories => Set<BusinessCategory>();
     public DbSet<FileRepo> FileRepos => Set<FileRepo>();
     public DbSet<Offer> Offers => Set<Offer>();
     public DbSet<Banner> Banners => Set<Banner>();
+    public DbSet<Vender> Venders => Set<Vender>();
+    public DbSet<BussinessCategory> BussinessCategories => Set<BussinessCategory>();
+
+
 
 
 

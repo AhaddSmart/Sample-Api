@@ -2,6 +2,7 @@
 using Application.Common.Mappings;
 using Application.Common.Models;
 using Application.DTOs.OfferDtos;
+using Application.Helper;
 using AutoMapper;
 using MediatR;
 
@@ -23,10 +24,12 @@ public class GetOffersQueryHandler : IRequestHandler<GetOffersQuery, ResponseHel
 
     public async Task<ResponseHelper> Handle(GetOffersQuery request, CancellationToken cancellationToken)
     {
+        var todaysDate = DateTimeHelper.GetStartOfDay(DateTime.Now);
         try
         {
             var result = await _context.Offers
-                 .ProjectToListAsync<OfferDto>(_mapper.ConfigurationProvider);
+                .Where(x => todaysDate >= x.from && todaysDate <= x.to)
+                .ProjectToListAsync<OfferDto>(_mapper.ConfigurationProvider);
             return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
         }
         catch (Exception ex)

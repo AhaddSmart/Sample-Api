@@ -38,39 +38,42 @@ public class UpdateOfferCommandHandler : IRequestHandler<UpdateOfferCommand, Res
             string jsonString = request.formRequest.Form["JsonString"];
 
             UpdateOfferDto objUpdateOfferDto = JsonConvert.DeserializeObject<UpdateOfferDto>(jsonString);
-
-            var entity = await _context.Offers.FindAsync(objUpdateOfferDto.Id);
-
-            if (entity == null)
+            if (objUpdateOfferDto.to > objUpdateOfferDto.from)
             {
-                return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "News not found"));
-            }
+                var entity = await _context.Offers.FindAsync(objUpdateOfferDto.Id);
 
-            entity.title = objUpdateOfferDto.title;
-            //entity.fileRepoId = objUpdateOfferDto.fileRepoId;
-            entity.from = objUpdateOfferDto.from;
-            entity.to = objUpdateOfferDto.to;
-
-            ImageRepositoryHelper imageRepositoryHelper = new(_context);
-
-            IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
-            string fileName = FileRepositoryTableRef.Offers + "_" + entity.Id;
-            int Position = 1; //dout
-            if (File != null)
-            {
-                int ImageRepoId = await imageRepositoryHelper.UpdateImage(entity.fileRepoId.Value, File, fileName, Position, FileRepositoryTableRef.Offers, objUpdateOfferDto.Id, cancellationToken);
-
-                if (ImageRepoId > 0)
+                if (entity == null)
                 {
-                    entity.fileRepoId = ImageRepoId;
+                    return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "News not found"));
                 }
+
+                entity.title = objUpdateOfferDto.title;
+                //entity.fileRepoId = objUpdateOfferDto.fileRepoId;
+                entity.from = objUpdateOfferDto.from;
+                entity.to = objUpdateOfferDto.to;
+
+                ImageRepositoryHelper imageRepositoryHelper = new(_context);
+
+                IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
+                string fileName = FileRepositoryTableRef.Offers + "_" + entity.Id;
+                int Position = 1; //dout
+                if (File != null)
+                {
+                    int ImageRepoId = await imageRepositoryHelper.UpdateImage(entity.fileRepoId.Value, File, fileName, Position, FileRepositoryTableRef.Offers, objUpdateOfferDto.Id, cancellationToken);
+
+                    if (ImageRepoId > 0)
+                    {
+                        entity.fileRepoId = ImageRepoId;
+                    }
+                }
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                //file work
+                var result = _mapper.Map<UpdateOfferDto>(entity);
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
             }
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            //file work
-            var result = _mapper.Map<UpdateOfferDto>(entity);
-            return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
+            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "to date must greater then from date", @"error"));
         }
         catch (Exception ex)
         {

@@ -3,6 +3,7 @@ using Application.Common.Mappings;
 using Application.Common.Models;
 using Application.DTOs.BannerDto;
 using Application.DTOs.OfferDtos;
+using Application.Helper;
 using AutoMapper;
 using MediatR;
 using System;
@@ -29,10 +30,12 @@ public class GetBannersQueryHandler : IRequestHandler<GetBannersQuery, ResponseH
 
     public async Task<ResponseHelper> Handle(GetBannersQuery request, CancellationToken cancellationToken)
     {
+        var todaysDate = DateTimeHelper.GetStartOfDay(DateTime.Now);
         try
         {
             var result = await _context.Banners
-                 .ProjectToListAsync<BannerDto>(_mapper.ConfigurationProvider);
+                .Where(x => todaysDate >= x.from && todaysDate <= x.to)
+                .ProjectToListAsync<BannerDto>(_mapper.ConfigurationProvider);
             return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
         }
         catch (Exception ex)

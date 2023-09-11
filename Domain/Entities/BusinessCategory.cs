@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities;
 
-public class BusinessCategory : BaseEntity<int>
+public class BussinessCategory : BaseEntity<int>
 {
     [Column("Name")]
     public string name { get; set; }

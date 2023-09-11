@@ -37,7 +37,7 @@ namespace Application.Services.Categories.Commands
         {
             try
             {
-                var entity = new Domain.Entities.Category
+                var entity = new Domain.Entities.BusinessCategory
                 {
                     name = request.name,
                     code = request.code,

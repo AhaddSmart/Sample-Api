@@ -26,7 +26,7 @@
     <Folder Include="Common\Behaviours\" />
     <Folder Include="Helpers\" />
     <Folder Include="Services\Cities\EventHandlers\" />
-    <Folder Include="Services\NewFolder\" />
+    <Folder Include="Services\Venders\" />
   </ItemGroup>
 
   <ItemGroup>

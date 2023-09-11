@@ -7,6 +7,7 @@ using AutoMapper;
 using Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -38,50 +39,49 @@ public class CreateOfferCommandHandler : IRequestHandler<CreateOfferCommand, Res
             string jsonString = request.formRequest.Form["JsonString"];
 
             CreateOfferDto objCreateOfferDto = JsonConvert.DeserializeObject<CreateOfferDto>(jsonString);
-
-            var entity = new Domain.Entities.Offer
-            {
-                //newsDate = objCreateOfferDto.newsDate,
-                title = objCreateOfferDto.title,
-                //newsContent = objCreateOfferDto.newsContent,
-                from = objCreateOfferDto.from,
-                to = objCreateOfferDto.to,
-            };
-
-            await _context.Offers.AddAsync(entity, cancellationToken);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var uploads = "Resources/uploads/Offers";
-
-            if (!Directory.Exists(uploads))
-                Directory.CreateDirectory(uploads);
-
-            ImageRepositoryHelper imageRepositoryHelper = new(_context);
-
-            IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
-            string fileName = FileRepositoryTableRef.Offers + "_" + entity.Id;
-            int Position = 1; //dout
-            if (File != null)
-            {
-                int ImageRepoId = await imageRepositoryHelper.SaveImage(File, fileName, Position, FileRepositoryTableRef.Offers, entity.Id, cancellationToken);
-
-                if (ImageRepoId > 0)
+            if (objCreateOfferDto.to > objCreateOfferDto.from) {
+                var entity = new Domain.Entities.Offer
                 {
-                    var ItemData = await _context.Offers
-                        .FindAsync(new object[] { entity.Id }, cancellationToken);
+                    title = objCreateOfferDto.title,
+                    from = objCreateOfferDto.from,
+                    to = objCreateOfferDto.to,
+                };
 
-                    if (ItemData != null)
+                await _context.Offers.AddAsync(entity, cancellationToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var uploads = "Resources/uploads/Offers";
+
+                if (!Directory.Exists(uploads))
+                    Directory.CreateDirectory(uploads);
+
+                ImageRepositoryHelper imageRepositoryHelper = new(_context);
+
+                IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
+                string fileName = FileRepositoryTableRef.Offers + "_" + entity.Id;
+                int Position = 1;
+                if (File != null)
+                {
+                    int ImageRepoId = await imageRepositoryHelper.SaveImage(File, fileName, Position, FileRepositoryTableRef.Offers, entity.Id, cancellationToken);
+
+                    if (ImageRepoId > 0)
                     {
-                        ItemData.fileRepoId = ImageRepoId;
+                        var ItemData = await _context.Offers
+                            .FindAsync(new object[] { entity.Id }, cancellationToken);
+
+                        if (ItemData != null)
+                        {
+                            ItemData.fileRepoId = ImageRepoId;
+                        }
                     }
                 }
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var result = _mapper.Map<CreateOfferDto>(entity);
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
             }
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var result = _mapper.Map<CreateOfferDto>(entity);
-            return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
-
+            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "to date must greater then from date", @"error"));
         }
         catch (Exception ex)
         {
