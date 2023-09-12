@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.CategoryDtos;
 
-public class CategoryDto : IMapFrom<BusinessCategory>
+public class CategoryDto : IMapFrom<Category>
 {
     public int Id { get; set; }
     public string name { get; set; }
@@ -22,6 +22,6 @@ public class CategoryDto : IMapFrom<BusinessCategory>
 
     public void Mapping(MappingProfile profile)
     {
-        profile.CreateMap<BusinessCategory, CategoryDto>();
+        profile.CreateMap<Category, CategoryDto>();
     }
 }

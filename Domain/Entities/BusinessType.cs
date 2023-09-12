@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities;
 
-public class BussinessCategory : BaseEntity<int>
+public class BusinessType : BaseEntity<int>
 {
     [Column("Name")]
     public string name { get; set; }
@@ -15,8 +15,8 @@ public class BussinessCategory : BaseEntity<int>
     public string code { get; set; }
     [Column("IsActive")]
     public bool isActive { get; set; } = true;
-    [Column("ParentCategoryId")]
-    public int? parentCategoryId { get; set; }
-    [Column("ParentCategory")]
-    public virtual BusinessCategory? ParentCategory { get; set; }
+    [Column("ParentTypeId")]
+    public int? parentTypeId { get; set; }
+    [Column("ParentType")]
+    public virtual BusinessType? ParentType { get; set; }
 }

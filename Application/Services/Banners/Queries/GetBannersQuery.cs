@@ -35,8 +35,17 @@ public class GetBannersQueryHandler : IRequestHandler<GetBannersQuery, ResponseH
         {
             var result = await _context.Banners
                 .Where(x => todaysDate >= x.from && todaysDate <= x.to)
+                .Select(banner => new BannerDto
+                {
+                    Id = banner.Id,
+                    title = banner.title,
+                    fileRepoId = banner.fileRepo.filePath
+                })
                 .ProjectToListAsync<BannerDto>(_mapper.ConfigurationProvider);
-            return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
+            if (result.Count == 0)
+                return new ResponseHelper(0, new object(), new ErrorDef(404, @"Error", "Not found", @"error"));
+            else
+                return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
         }
         catch (Exception ex)
         {

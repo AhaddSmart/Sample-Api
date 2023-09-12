@@ -61,7 +61,7 @@ public class CreateBannerCommandHandler : IRequestHandler<CreateBannerCommand, R
 
                 IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
                 string fileName = FileRepositoryTableRef.Banners + "_" + entity.Id;
-                int Position = 1; //dout
+                int Position = 1; 
                 if (File != null)
                 {
                     int ImageRepoId = await imageRepositoryHelper.SaveImage(File, fileName, Position, FileRepositoryTableRef.Banners, entity.Id, cancellationToken);
@@ -82,7 +82,7 @@ public class CreateBannerCommandHandler : IRequestHandler<CreateBannerCommand, R
                 var result = _mapper.Map<CreateBannerDto>(entity);
                 return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
             }
-            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "to date must greater then from date", @"error"));
+            return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "TO date must be greater than FROM date", @"error"));
         }
         catch (Exception ex)
         {

@@ -2,6 +2,7 @@
 using Application.Common.Models;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services.Categories.Commands
 {
@@ -32,9 +33,12 @@ namespace Application.Services.Categories.Commands
                     return new ResponseHelper(0, true, new ErrorDef(-1, "404 not found", "Category not found"));
                 }
 
-                if (entity.parentCategoryId != null)
+                var hasChildTypes = await _context.Categories
+                    .AnyAsync(bt => bt.parentCategoryId == entity.Id, cancellationToken);
+
+                if (hasChildTypes)
                 {
-                    return new ResponseHelper(0, new object(), new ErrorDef(0, "400", "Category have child Category"));
+                    return new ResponseHelper(0, new object(), new ErrorDef(0, "400", "This Business Type has child types"));
                 }
                 else
                 {
@@ -42,6 +46,17 @@ namespace Application.Services.Categories.Commands
                     await _context.SaveChangesAsync(cancellationToken);
                     return new ResponseHelper(1, true, new ErrorDef(0, string.Empty, string.Empty));
                 }
+
+                //if (entity.parentCategoryId != null)
+                //{
+                //    return new ResponseHelper(0, new object(), new ErrorDef(0, "400", "Category have child Category"));
+                //}
+                //else
+                //{
+                //    _context.Categories.Remove(entity);
+                //    await _context.SaveChangesAsync(cancellationToken);
+                //    return new ResponseHelper(1, true, new ErrorDef(0, string.Empty, string.Empty));
+                //}
             }
             catch (Exception ex)
             {

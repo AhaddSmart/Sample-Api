@@ -216,8 +216,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
-//builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-//builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -296,7 +296,7 @@ app.UseStaticFiles(new StaticFileOptions()
     RequestPath = new PathString("/Resources/uploads")
 });
 app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

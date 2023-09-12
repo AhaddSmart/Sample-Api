@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.DTOs.BusinessTypeyDtos;
 using Application.DTOs.CategoryDtos;
 using Application.DTOs.NewsDtos;
 using Application.Services.News.Commands;
@@ -12,43 +13,42 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Application.Services.Categories.Commands
+namespace Application.Services.BusinesTypes.Commands
 {
-    public class CreateCategoryCommand : IRequest<ResponseHelper>
+    public class CreateBusinessTypeCommand : IRequest<ResponseHelper>
     {
         public string name { get; set; }
         public string code { get; set; }
         public bool isActive { get; set; }
-        public int? parentCategoryId { get; set; } = null;
+        public int? parentTypeId { get; set; } = null;
 
     }
-    public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, ResponseHelper>
+    public class CreateBusinessTypeCommandHandler : IRequestHandler<CreateBusinessTypeCommand, ResponseHelper>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public CreateCategoryCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public CreateBusinessTypeCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<ResponseHelper> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        public async Task<ResponseHelper> Handle(CreateBusinessTypeCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var entity = new Domain.Entities.Category
+                var entity = new Domain.Entities.BusinessType
                 {
                     name = request.name,
                     code = request.code,
                     isActive = request.isActive,
-                    parentCategoryId = request.parentCategoryId,
-
+                    parentTypeId = request.parentTypeId,
                 };
-                await _context.Categories.AddAsync(entity, cancellationToken);
+                await _context.BusinessTypes.AddAsync(entity, cancellationToken);
 
                 await _context.SaveChangesAsync(cancellationToken);
-                var result = _mapper.Map<CategoryDto>(entity);
+                var result = _mapper.Map<BusinessTypeDto>(entity);
 
                 return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
             }

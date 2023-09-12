@@ -32,15 +32,15 @@ public static class ApplicationDbContextSeed
         // Seed, if necessary
         if (!context.Categories.Any())
         {
-            context.Categories.AddRange(new BusinessCategory[]
+            context.Categories.AddRange(new Category[]
             {
-                new BusinessCategory { name = "Berlin", code="1"},
-                new BusinessCategory { name = "Hamburg", code="2" },
-                new BusinessCategory { name = "München", code="3" },
-                new BusinessCategory { name = "Köln", code="4" },
-                new BusinessCategory { name = "Frankfurt am Main", code="5" },
-                new BusinessCategory { name = "Stuttgart" , code = "6"},
-                new BusinessCategory { name = "Düsseldorf" , code="7"}
+                new Category { name = "Berlin", code="1"},
+                new Category { name = "Hamburg", code="2" },
+                new Category { name = "München", code="3" },
+                new Category { name = "Köln", code="4" },
+                new Category { name = "Frankfurt am Main", code="5" },
+                new Category { name = "Stuttgart" , code = "6"},
+                new Category { name = "Düsseldorf" , code="7"}
             });
 
             await context.SaveChangesAsync();

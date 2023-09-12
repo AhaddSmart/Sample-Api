@@ -9,19 +9,19 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.DTOs.BusinessCategoryDtos;
+namespace Application.DTOs.BusinessTypeyDtos;
 
-public class BusinessCategoryDto : IMapFrom<BusinessCategory>
+public class BusinessTypeDto : IMapFrom<BusinessType>
 {
     public int Id { get; set; }
     public string name { get; set; }
     public string code { get; set; }
     public bool isActive { get; set; }
-    public int? parentCategoryId { get; set; }
-    public BusinessCategoryDto? ParentCategory { get; set; }
+    public int? parentTypeId { get; set; }
+    public BusinessTypeDto? ParentType { get; set; }
 
     public void Mapping(MappingProfile profile)
     {
-        profile.CreateMap<BusinessCategory, BusinessCategoryDto>();
+        profile.CreateMap<BusinessType, BusinessTypeDto>();
     }
 }

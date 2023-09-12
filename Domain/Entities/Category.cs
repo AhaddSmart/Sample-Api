@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities;
 
-public class BusinessCategory : BaseEntity<int>
+public class Category : BaseEntity<int>
 {
     [Column("Name")]
     public string name { get; set; }
@@ -18,5 +18,5 @@ public class BusinessCategory : BaseEntity<int>
     [Column("ParentCategoryId")]
     public int? parentCategoryId { get; set; }
     [Column("ParentCategory")]
-    public virtual BusinessCategory? ParentCategory { get; set; }
+    public virtual Category? ParentCategory { get; set; }
 }
