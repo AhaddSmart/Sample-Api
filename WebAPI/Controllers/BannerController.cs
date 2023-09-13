@@ -8,17 +8,30 @@ using WebUI.Controllers;
 using Application.Services.Banner.Queries;
 using Application.Services.Banner.Commands;
 using Application.Services.Banners.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers;
 
 public class BannerController : ApiControllerBase
 {
+    private readonly ILogger<BannerController> _logger;
+    public BannerController(ILogger<BannerController> logger)
+    {
+        _logger = logger;
+    }
     //[Authorize()]
     [HttpGet]
     [Route("v1/[controller]")]
     public async Task<ResponseHelper> Get()
     {
-        return await Mediator.Send(new GetBannersQuery());
+        _logger.LogInformation("GetBanner method started");
+        
+            //return await Mediator.Send(new GetBannersQuery());
+            var result = await Mediator.Send(new GetBannersQuery());
+        if(result.status == 0)
+            _logger.LogError("GetBanner : "+ result.error);
+
+        return result;
     }
     [HttpGet]
     [Route("v1/[controller]/{Id}")]

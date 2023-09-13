@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230913103714_updateEntityVendor")]
+    partial class updateEntityVendor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,39 +210,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FileRepos");
-                });
-
-            modelBuilder.Entity("Domain.Entities.LogEntry", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("logLevel")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("LogLevel");
-
-                    b.Property<string>("message")
-                        .IsRequired()
-                        .HasColumnType("longtext")
-                        .HasColumnName("Message");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LogEntries");
                 });
 
             modelBuilder.Entity("Domain.Entities.News", b =>

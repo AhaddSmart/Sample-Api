@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Vender : BaseEntity<int>
+public class Vendor : BaseEntity<int>
 {
     [Column("LogoId")]
     [ForeignKey("logoRepo")]

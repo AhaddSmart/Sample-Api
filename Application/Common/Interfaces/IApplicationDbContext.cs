@@ -13,10 +13,9 @@ namespace Application.Common.Interfaces
         DbSet<Offer> Offers{ get; }
         DbSet<Banner> Banners { get; }
         DbSet<FileRepo> FileRepos { get; }
-        DbSet<Vender> Venders { get; }
+        DbSet<Vendor> Vendors { get; }
         DbSet<BusinessType> BusinessTypes{ get; }
-
-
+        DbSet<LogEntry> LogEntries { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

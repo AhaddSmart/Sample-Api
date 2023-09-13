@@ -12,13 +12,14 @@ public class BannerDto : IMapFrom<Banner>
 {
     public int Id { get; set; }
     public string title { get; set; }
-    public string fileRepoId { get; set; }
+    //public string fileRepoId { get; set; }
+    public string? path { get; set;}
 
     //public DateTime? from { get; set; }
     //public DateTime? to { get; set; }
     public void Mapping(MappingProfile profile)
     {
-        profile.CreateMap<Banner, BannerDto>();
+        profile.CreateMap<Banner, BannerDto>().ForMember(x => x.path, y => y.MapFrom(z => z.fileRepo != null ? z.fileRepo.filePath: ""));
     }
 }
 

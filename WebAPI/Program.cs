@@ -170,6 +170,9 @@ using WebUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 // Add services to the container.
 builder.Services.AddCors();
 builder.Services.AddControllers();
@@ -297,7 +300,7 @@ app.UseStaticFiles(new StaticFileOptions()
 });
 app.UseAuthentication();
 //app.UseAuthorization();
-
+app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 
 app.Run();
