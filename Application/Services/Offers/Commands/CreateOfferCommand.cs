@@ -38,7 +38,7 @@ public class CreateOfferCommandHandler : IRequestHandler<CreateOfferCommand, Res
         {
             string jsonString = request.formRequest.Form["JsonString"];
 
-            CreateOfferDto objCreateOfferDto = JsonConvert.DeserializeObject<CreateOfferDto>(jsonString);
+            CreateVenderDto objCreateOfferDto = JsonConvert.DeserializeObject<CreateVenderDto>(jsonString);
             if (objCreateOfferDto.to > objCreateOfferDto.from) {
                 var entity = new Domain.Entities.Offer
                 {
@@ -78,7 +78,7 @@ public class CreateOfferCommandHandler : IRequestHandler<CreateOfferCommand, Res
                 }
                 await _context.SaveChangesAsync(cancellationToken);
 
-                var result = _mapper.Map<CreateOfferDto>(entity);
+                var result = _mapper.Map<CreateVenderDto>(entity);
                 return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
             }
             return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "to date must greater then from date", @"error"));

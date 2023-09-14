@@ -11,12 +11,12 @@ public class Vendor : BaseEntity<int>
     [Column("Name")]
     public string name { get; set; }
     [Column("LIC_No")]
-    public string LIC_no { get; set; }
+    public string lic_no { get; set; }
     [Column("TaxNo")]
     public string taxNo { get; set; }
     [Column("PersonName")]
     public string personName { get; set; }
-    [Column("designation")]
+    [Column("Designation")]
     public string designation { get; set; }
     [Column("Country")]
     public string country { get; set; }

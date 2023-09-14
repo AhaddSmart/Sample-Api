@@ -13,5 +13,9 @@ public class LogEntry : BaseEntity<int>
     public string logLevel { get; set; }
     [Column("Message")]
     public string message { get; set; }
+    [Column("RequestTime")]
+    public DateTime requestTime { get; set; }
+    [Column("ResponseTime")]
+    public DateTime responseTime { get; set; }
 }
 

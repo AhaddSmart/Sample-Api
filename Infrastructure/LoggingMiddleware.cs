@@ -1,32 +1,40 @@
 ﻿using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualBasic;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 
-namespace Infrastructure
+public class LoggingMiddleware
 {
-    public class LoggingMiddleware
+    private readonly RequestDelegate _next;
+    private readonly IServiceProvider _serviceProvider;
+
+    public LoggingMiddleware(RequestDelegate next, IServiceProvider serviceProvider)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<LoggingMiddleware> _logger;
-        private readonly ApplicationDbContext _dbContext;
+        _next = next;
+        _serviceProvider = serviceProvider;
+    }
 
-        public LoggingMiddleware(RequestDelegate next, ILogger<LoggingMiddleware> logger, ApplicationDbContext dbContext)
+    public async Task Invoke(HttpContext context)
+    {
+        using (var scope = _serviceProvider.CreateScope())
         {
-            _next = next;
-            _logger = logger;
-            _dbContext = dbContext;
-        }
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            DateTime requestTime = DateTime.UtcNow;
 
-        public async Task Invoke(HttpContext context)
-        {
             // Log request information before processing
-            _logger.LogInformation($"Request: {context.Request.Method} {context.Request.Path}");
+            var requestLogEntry = new LogEntry
+            {
+                logLevel = "Information",
+                message = $"Request: {context.Request.Method} {context.Request.Path}",
+                //Timestamp = DateTime.UtcNow
+            };
+
+            //dbContext.LogEntries.Add(requestLogEntry);
 
             // Capture the response status code
             var originalBodyStream = context.Response.Body;
@@ -36,28 +44,24 @@ namespace Infrastructure
             await _next(context);
 
             // Log response information after processing
-            var responseContent = await FormatResponseAsync(context.Response);
-
-            // Log to the database
-            _dbContext.LogEntries.Add(new LogEntry
+            var responseLogEntry = new LogEntry
             {
                 logLevel = "Information",
-                message = $"Request: {context.Request.Method} {context.Request.Path}, Response: {context.Response.StatusCode}, {responseContent}"
-            });
+                message = $"Request: {context.Request.Method} {context.Request.Path}, Response: {context.Response.StatusCode}",
+                requestTime = requestTime,
+                responseTime = DateTime.UtcNow,
+                //Timestamp = DateTime.UtcNow
+            };
 
-            await _dbContext.SaveChangesAsync();
+            //Trace = 0, Debug = 1, Information = 2, Warning = 3, Error = 4, Critical = 5,  None = 6.
+
+            dbContext.LogEntries.Add(responseLogEntry);
+
+            await dbContext.SaveChangesAsync();
 
             // Restore the original response body
             responseBody.Seek(0, SeekOrigin.Begin);
             await responseBody.CopyToAsync(originalBodyStream);
-        }
-
-        private async Task<string> FormatResponseAsync(HttpResponse response)
-        {
-            response.Body.Seek(0, SeekOrigin.Begin);
-            var responseBody = await new StreamReader(response.Body).ReadToEndAsync();
-            response.Body.Seek(0, SeekOrigin.Begin);
-            return responseBody;
         }
     }
 }
