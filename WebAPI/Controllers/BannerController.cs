@@ -26,6 +26,15 @@ public class BannerController : ApiControllerBase
     {
         _logger.LogInformation("GetBanner method started");
         
+        //try
+        //{
+            //var val = "121a";
+            //int a = Convert.ToInt32(val);
+        //}
+        //catch(Exception ex)
+        //{
+
+        //}
             //return await Mediator.Send(new GetBannersQuery());
             var result = await Mediator.Send(new GetBannersQuery());
         if(result.status == 0)

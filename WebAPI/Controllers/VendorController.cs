@@ -1,6 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Models;
-using Application.Services.Vendors.Commands;
+//using Application.Services.Vendors.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebUI.Controllers;
@@ -22,14 +22,14 @@ public class VenderController : ApiControllerBase
     //{
     //    return await Mediator.Send(new GetOfferByIdQuery { Id = Id });
     //}
-    [HttpPost]
-    [Route("v1/[controller]")]
-    public async Task<ResponseHelper> Create()
-    {
-        CreateVendorCommand command = new();
-        command.formRequest = Request;
-        return await Mediator.Send(command);
-    }
+    //[HttpPost]
+    //[Route("v1/[controller]")]
+    //public async Task<ResponseHelper> Create()
+    //{
+    //    CreateVendorCommand command = new();
+    //    command.formRequest = Request;
+    //    return await Mediator.Send(command);
+    //}
     //[HttpPut("v1/[controller]")]
     //public async Task<ResponseHelper> Update()
     //{

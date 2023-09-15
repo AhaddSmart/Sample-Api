@@ -28,4 +28,12 @@ namespace Application.Common.Exceptions
         {
         }
     }
+
+    //public class FormatException : Exception
+    //{
+    //    public FormatException() : base()
+    //    {
+    //        Console.WriteLine("here i am");
+    //    }
+    //}
 }

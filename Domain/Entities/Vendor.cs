@@ -11,9 +11,9 @@ public class Vendor : BaseEntity<int>
     [Column("Name")]
     public string name { get; set; }
     [Column("LIC_No")]
-    public string lic_no { get; set; }
+    public string? lic_no { get; set; }
     [Column("TaxNo")]
-    public string taxNo { get; set; }
+    public string? taxNo { get; set; }
     [Column("PersonName")]
     public string personName { get; set; }
     [Column("Designation")]
@@ -27,11 +27,11 @@ public class Vendor : BaseEntity<int>
     [Column("Email")]
     public string email { get; set; }
     [Column("MobileNo")]
-    public string mobileNo { get; set; }
+    public string? mobileNo { get; set; }
     [Column("Website")]
-    public string website { get; set; }
+    public string? website { get; set; }
     [Column("MobileNos")]
-    public string mobileNos { get; set; }  //" | | "
+    public string? mobileNos { get; set; }  //" | | "
     [Column("Emails")]
-    public string emails { get; set; }  //" | | "
+    public string? emails { get; set; }  //" | | "
 }
