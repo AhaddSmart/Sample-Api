@@ -8,7 +8,6 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.DTOs;
 using AutoMapper;
-using Domain.Entities.Sample;
 using MediatR;
 
 namespace Application.Services.About.Commands

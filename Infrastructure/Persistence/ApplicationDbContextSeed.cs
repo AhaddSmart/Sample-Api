@@ -1,6 +1,6 @@
 ﻿using Application.Common.Models;
 using Domain.Entities;
-using Domain.Entities.Sample;
+
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 

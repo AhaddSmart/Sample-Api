@@ -2,7 +2,6 @@
 using Application.Common.Models;
 using Application.DTOs;
 using AutoMapper;
-using Domain.Entities.Sample;
 using MediatR;
 
 namespace Application.Services.About.Commands
@@ -28,7 +27,7 @@ namespace Application.Services.About.Commands
         {
             try
             {
-                var entity = new Domain.Entities.Sample.About
+                var entity = new Domain.Entities.About
                 {
                     text = request.text
                 };

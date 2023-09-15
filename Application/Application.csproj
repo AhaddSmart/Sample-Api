@@ -9,8 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\Cities\**" />
     <Compile Remove="Services\NewFolder2\**" />
+    <EmbeddedResource Remove="Services\Cities\**" />
     <EmbeddedResource Remove="Services\NewFolder2\**" />
+    <None Remove="Services\Cities\**" />
     <None Remove="Services\NewFolder2\**" />
   </ItemGroup>
 
@@ -25,7 +28,6 @@
   <ItemGroup>
     <Folder Include="Common\Behaviours\" />
     <Folder Include="Helpers\" />
-    <Folder Include="Services\Cities\EventHandlers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,5 +40,7 @@
 		<Compile Remove="Common\Behaviours\PerformanceBehaviour.cs" />
 		<Compile Remove="Common\Behaviours\UnhandledExceptionBehaviour.cs" />
 		<Compile Remove="Common\Behaviours\ValidationBehaviour.cs" />
+		<Compile Remove="DTOs\OfferDto.cs" />
+		<Compile Remove="DTOs\OfferDtoByID.cs" />
 	</ItemGroup>
 </Project>

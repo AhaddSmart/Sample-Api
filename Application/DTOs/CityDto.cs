@@ -1,6 +1,6 @@
 ﻿using Application.Common.Mappings;
-using Domain.Entities.Sample;
 using AutoMapper;
+using Domain.Entities;
 
 namespace Application.DTOs
 {

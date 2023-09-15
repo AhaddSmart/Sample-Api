@@ -7,5 +7,6 @@ namespace Domain.Enums
         Offers = 2,
         Banners = 3,
         Logos = 4,
+        VendorDocs = 5,
     }
 }

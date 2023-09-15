@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Application.Common.Interfaces;
 using Domain.Common;
-using Domain.Entities.Sample;
 using Infrastructure.Identity;
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;

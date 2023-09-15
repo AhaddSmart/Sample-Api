@@ -1,5 +1,4 @@
-﻿using Domain.Entities.Sample;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common.Interfaces

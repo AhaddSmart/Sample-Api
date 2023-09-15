@@ -1,6 +1,5 @@
 ﻿using Application.Common.Mappings;
 using Domain.Entities;
-using Domain.Entities.Sample;
 using System;
 using System.Collections.Generic;
 using System.Linq;
