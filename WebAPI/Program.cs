@@ -156,6 +156,7 @@ using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Identity;
 using Infrastructure.Persistence;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -176,6 +177,7 @@ builder.Logging.AddConsole();
 // Add services to the container.
 builder.Services.AddCors();
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(setup =>
@@ -216,6 +218,9 @@ builder.Services.AddSwaggerGen(setup =>
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+//builder.Services.AddScoped<ExceptionLogService>();
+//builder.Services.AddScoped<GlobalExceptionHandlerMiddleware>();
 
 builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
@@ -263,6 +268,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
+        //var exceptionLogService = services.GetRequiredService<ExceptionLogService>();
         var context = services.GetRequiredService<ApplicationDbContext>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
@@ -298,7 +304,9 @@ app.UseStaticFiles(new StaticFileOptions()
     RequestPath = new PathString("/Resources/uploads")
 });
 app.UseAuthentication();
+//app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 //app.UseAuthorization();
+app.UseMiddleware<ExceptionLoggingMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 app.Run();

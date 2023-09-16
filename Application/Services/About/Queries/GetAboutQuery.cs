@@ -28,6 +28,8 @@ public class GetAboutQueryHandler : IRequestHandler<GetAboutQuery, ResponseHelpe
 
     public async Task<ResponseHelper> Handle(GetAboutQuery request, CancellationToken cancellationToken)
     {
+        string abc = "abc";
+        int xyz = Convert.ToInt32(abc);
         try
         {
             var result = await _context.Abouts

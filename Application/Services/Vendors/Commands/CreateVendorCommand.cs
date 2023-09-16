@@ -78,7 +78,7 @@ public class CreateVendorCommandHandler : IRequestHandler<CreateVendorCommand, R
                     IFormFile File = request.formRequest.Form.Files[i];
                     if (i != 0)
                     {
-                        string fileName = FileRepositoryTableRef.Logos + "_" + entity.Id;
+                        string fileName = FileRepositoryTableRef.VendorDocs + "_" + entity.Id;
                         int Position = 1;
                         if (File != null)
                         {
