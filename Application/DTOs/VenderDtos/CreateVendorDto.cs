@@ -22,12 +22,13 @@ namespace Application.DTOs.VenderDtos
         public string email { get; set; }
         public string? mobileNo { get; set; }
         public string? website { get; set; }
-        public string? mobileNos { get; set; }  //" | | "
-        public string? emails { get; set; }  //" | | "
+        public string[]? mobileNos { get; set; }  //" | | "
+        public string[]? emails { get; set; }
         public string logoPath{ get; set; }
         public void Mapping(MappingProfile profile)
         {
             profile.CreateMap<Vendor, CreateVendorDto>().ForMember(x => x.logoPath, y => y.MapFrom(z => z.logoRepo != null ? z.logoRepo.filePath : ""));
         }
+        
     }
 }

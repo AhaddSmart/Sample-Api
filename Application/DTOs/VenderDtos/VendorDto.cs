@@ -12,8 +12,9 @@ namespace Application.DTOs.VenderDtos
     public class VendorDto : IMapFrom<Vendor>
     {
         public int Id { get; set; }
-        public int? logoId { get; set; }
-        public FileRepoDto? logoRepo { get; set; }
+        //public int? logoId { get; set; }
+        public string? logoPath { get; set; }
+        //public FileRepoDto? logoRepo { get; set; }
         public string name { get; set; }
         public string? lic_no { get; set; }
         public string? taxNo { get; set; }
@@ -30,7 +31,7 @@ namespace Application.DTOs.VenderDtos
 
         public void Mapping(MappingProfile profile)
         {
-            profile.CreateMap<Vendor, VendorDto>();
+            profile.CreateMap<Vendor, VendorDto>().ForMember(x => x.logoPath, y => y.MapFrom(z => z.logoRepo != null ? z.logoRepo.filePath : ""));
         }
     }
 }

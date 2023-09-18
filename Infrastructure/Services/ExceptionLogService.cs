@@ -24,7 +24,6 @@ namespace Infrastructure.Services
                 Timestamp = DateTime.UtcNow,
                 Message = ex.Message,
                 StackTrace = ex.StackTrace,
-                // Set other properties as needed
             };
 
             _dbContext.ExceptionLogs.Add(exceptionLog);

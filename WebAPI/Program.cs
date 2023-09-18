@@ -306,7 +306,7 @@ app.UseStaticFiles(new StaticFileOptions()
 app.UseAuthentication();
 //app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 //app.UseAuthorization();
-app.UseMiddleware<ExceptionLoggingMiddleware>();
+//app.UseMiddleware<ExceptionLoggingMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
 app.MapControllers();
 app.Run();

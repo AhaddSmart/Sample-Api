@@ -17,7 +17,7 @@ public class VendorController : ApiControllerBase
         return await Mediator.Send(new GetVendorsQuery());
     }
 
-    [HttpGet("v1/[controller]/{id}")]
+    [HttpGet("v1/[controller]/{Id}")]
     public async Task<ResponseHelper> GetVendorByID(int Id)
     {
         return await Mediator.Send(new GetVendorQueryByID { Id = Id });

@@ -1,7 +1,12 @@
 ﻿using Application.Common.Exceptions;
-
+using Application.Common.Interfaces;
+using Domain.Entities;
+using Infrastructure.Persistence;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace WebUI.Filters;
 
@@ -9,8 +14,8 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
 
     private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
-
-    public ApiExceptionFilterAttribute()
+    private readonly ApplicationDbContext _dbContext;
+    public ApiExceptionFilterAttribute(ApplicationDbContext dbContext)
     {
         // Register known exception types and handlers.
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
@@ -20,6 +25,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
             };
+        _dbContext = dbContext;
     }
 
     public override void OnException(ExceptionContext context)
@@ -44,7 +50,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             return;
         }
 
-        //HandleUnknownException(context);
+        HandleUnknownException(context);
     }
 
     private void HandleValidationException(ExceptionContext context)
@@ -123,20 +129,62 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.ExceptionHandled = true;
     }
 
-    //private void HandleUnknownException(ExceptionContext context)
-    //{
-    //    var details = new ProblemDetails
-    //    {
-    //        Status = StatusCodes.Status500InternalServerError,
-    //        Title = "An error occurred while processing your request.",
-    //        Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
-    //    };
+    private void HandleUnknownException(ExceptionContext context)
+    {
+        var details = new ProblemDetails
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "An error occurred while processing your request.",
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
+        };
 
-    //    context.Result = new ObjectResult(details)
-    //    {
-    //        StatusCode = StatusCodes.Status500InternalServerError
-    //    };
+        LogException(context.Exception);
 
-    //    context.ExceptionHandled = true;
-    //}
+        context.Result = new ObjectResult(details)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
+        };
+
+        context.ExceptionHandled = true;
+    }
+
+    private void LogException(Exception exception)
+    {
+
+        using (_dbContext)
+        {
+            var exceptionLog = new ExceptionLog
+            {
+                Message = exception.Message,
+                StackTrace = exception.StackTrace,
+                Timestamp = DateTime.UtcNow
+            };
+
+            CaptureExceptionLocation(exception, exceptionLog);
+
+            _dbContext.ExceptionLogs.Add(exceptionLog);
+            _dbContext.SaveChanges();
+        }
+    }
+
+    private static void CaptureExceptionLocation(Exception ex, ExceptionLog exceptionLog)
+    {
+        var stackTrace = new StackTrace(ex, true);
+        foreach (var frame in stackTrace.GetFrames())
+        {
+            var method = frame.GetMethod();
+
+            if (method != null)
+            {
+                var declaringType = method.DeclaringType;
+                if (declaringType != null)
+                {
+                    exceptionLog.ClassName = declaringType.FullName == null ? "NoClassName" : declaringType.FullName;
+                    exceptionLog.FileName = frame.GetFileName() == null ? "NoFileName" : frame.GetFileName();
+                    exceptionLog.LineNumber = frame.GetFileLineNumber() == 0 ? 0 : frame.GetFileLineNumber();
+                    break;
+                }
+            }
+        }
+    }
 }

@@ -37,19 +37,20 @@ namespace Infrastructure
                     var exceptionLog = new ExceptionLog();
 
                     exceptionLog.Timestamp = DateTime.UtcNow;
-                      exceptionLog.Message = ex.Message;
+                    exceptionLog.Message = ex.Message;
                     exceptionLog.StackTrace = ex.StackTrace;
-                    
+
+                    CaptureExceptionLocation(ex, exceptionLog);
 
                     // Capture additional exception location information
-                    var stackTrace = new StackTrace(ex, true);
-                    if (stackTrace.FrameCount > 0)
-                    {
-                        var frame = stackTrace.GetFrame(0);
-                        exceptionLog.FileName = frame.GetFileName() == null? "NoName": frame.GetFileName();
-                        exceptionLog.LineNumber = frame.GetFileLineNumber() == 0 ? 0 : frame.GetFileLineNumber();
-                        exceptionLog.ClassName = frame.GetMethod().DeclaringType.FullName == null ? "NoClassName" : frame.GetMethod().DeclaringType.FullName;
-                    }
+                    //var stackTrace = new StackTrace(ex, true);
+                    //if (stackTrace.FrameCount > 0)
+                    //{
+                    //    var frame = stackTrace.GetFrame(0);
+                    //    exceptionLog.FileName = frame.GetFileName() == null ? "NoName" : frame.GetFileName();
+                    //    exceptionLog.LineNumber = frame.GetFileLineNumber() == 0 ? 0 : frame.GetFileLineNumber();
+                    //    exceptionLog.ClassName = frame.GetMethod().DeclaringType.FullName == null ? "NoClassName" : frame.GetMethod().DeclaringType.FullName;
+                    //}
                     dbContext.ExceptionLogs.Add(exceptionLog);
                     await dbContext.SaveChangesAsync();
                 }
@@ -59,6 +60,66 @@ namespace Infrastructure
             }
 
         }
+        private static void CaptureExceptionLocation(Exception ex, ExceptionLog exceptionLog)
+        {
+            var stackTrace = new StackTrace(ex, true);
+            foreach (var frame in stackTrace.GetFrames())
+            {
+                var method = frame.GetMethod();
+                if (method != null)
+                {
+                    var declaringType = method.DeclaringType;
+                    if (declaringType != null)
+                    {
+                        exceptionLog.ClassName = declaringType.FullName == null ? "NoName" : declaringType.FullName;
+                        exceptionLog.FileName = frame.GetFileName() == null ? "NoClassName" : frame.GetFileName();
+                        exceptionLog.LineNumber = frame.GetFileLineNumber() == 0 ? 0 : frame.GetFileLineNumber();
+                        break;
+                    }
+                }
+            }
+        }
+
+        //private static void CaptureExceptionLocation(Exception ex, ExceptionLog exceptionLog)
+        //{
+        //    if (ex == null || exceptionLog == null)
+        //    {
+        //        return; // Check for null references
+        //    }
+
+        //    var stackTrace = new StackTrace(ex, true);
+        //    foreach (var frame in stackTrace.GetFrames())
+        //    {
+        //        var method = frame.GetMethod();
+        //        if (method != null)
+        //        {
+        //            var declaringType = method.DeclaringType;
+        //            if (declaringType != null)
+        //            {
+        //                // Initialize the ExceptionLog object if necessary
+        //                if (exceptionLog.ClassName == null)
+        //                {
+        //                    exceptionLog.ClassName = declaringType.FullName;
+        //                }
+
+        //                if (exceptionLog.FileName == null)
+        //                {
+        //                    exceptionLog.FileName = frame.GetFileName();
+        //                }
+
+        //                if (exceptionLog.LineNumber == 0)
+        //                {
+        //                    exceptionLog.LineNumber = frame.GetFileLineNumber();
+        //                }
+
+        //                // Break after the first frame with valid information
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
+
     }
+
 }
 

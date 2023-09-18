@@ -12,8 +12,8 @@ namespace Domain.Entities
         public DateTime Timestamp { get; set; }
         public string Message { get; set; }
         public string StackTrace { get; set; }
-        public string FileName { get; set; } // Add property for file name
-        public int LineNumber { get; set; }  // Add property for line number
-        public string ClassName { get; set; } // Add property for class name
+        public string? FileName { get; set; } 
+        public int? LineNumber { get; set; }  
+        public string? ClassName { get; set; } 
     }
 }

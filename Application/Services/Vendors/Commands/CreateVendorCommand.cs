@@ -11,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -55,8 +56,8 @@ public class CreateVendorCommandHandler : IRequestHandler<CreateVendorCommand, R
                 email = objCreateVendorDto.email,
                 mobileNo = objCreateVendorDto.mobileNo,
                 website = objCreateVendorDto.website,
-                mobileNos = objCreateVendorDto.mobileNos,
-                emails = objCreateVendorDto.emails,
+                mobileNos = string.Join(" | ", objCreateVendorDto.mobileNos),
+                emails = string.Join(" | ", objCreateVendorDto.emails),
             };
 
             await _context.Vendors.AddAsync(entity, cancellationToken);
@@ -111,7 +112,8 @@ public class CreateVendorCommandHandler : IRequestHandler<CreateVendorCommand, R
             
             await _context.SaveChangesAsync(cancellationToken);
 
-            var result = _mapper.Map<CreateVendorDto>(entity);
+            //var result = _mapper.Map<CreateVendorDto>(entity);
+            var result = new { Id = entity.Id };
             return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
 
             //return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "to date must greater then from date", @"error"));
