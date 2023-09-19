@@ -137,8 +137,10 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             Title = "An error occurred while processing your request.",
             Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
         };
-
-        LogException(context.Exception);
+        Console.WriteLine(context.HttpContext.Items["id"].ToString());
+        var id = Convert.ToInt32(context.HttpContext.Items["id"].ToString());
+        Console.WriteLine("log id"+id);
+        LogException(context.Exception, id);
 
         context.Result = new ObjectResult(details)
         {
@@ -148,7 +150,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.ExceptionHandled = true;
     }
 
-    private void LogException(Exception exception)
+    private void LogException(Exception exception, int id)
     {
 
         using (_dbContext)
@@ -157,7 +159,8 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             {
                 Message = exception.Message,
                 StackTrace = exception.StackTrace,
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                LogId = id
             };
 
             CaptureExceptionLocation(exception, exceptionLog);

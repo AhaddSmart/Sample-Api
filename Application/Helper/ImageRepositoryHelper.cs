@@ -42,7 +42,7 @@ namespace Application.Helpers
                 fileName = FileName,
                 filePath = filePath,
                 filePosition = Position,
-                TabelRef = TableRefernce,
+                TableRef = TableRefernce,
                 tableRefID = TableRefID,
                 type = file.ContentType != null ? file.ContentType : "",
             };
@@ -88,7 +88,7 @@ namespace Application.Helpers
                     ImageRepoData.fileName = FileName;
                     ImageRepoData.filePath = filePath;
                     ImageRepoData.filePosition = Position;
-                    ImageRepoData.TabelRef = TableRefernce;
+                    ImageRepoData.TableRef = TableRefernce;
                     ImageRepoData.tableRefID = TableRefID;
                     //ImageRepoData.type = type;
                     ImageRepoData.type = file.ContentType != null ? file.ContentType : "";
@@ -122,7 +122,6 @@ namespace Application.Helpers
 
         //public async Task<bool> DeleteImage(int ImageRepoId, CancellationToken cancellationToken)
         public async Task<bool> DeleteImage(int fileRepoID, CancellationToken cancellationToken)
-
         {
             try
             {

@@ -14,6 +14,7 @@ namespace Domain.Entities
         public string StackTrace { get; set; }
         public string? FileName { get; set; } 
         public int? LineNumber { get; set; }  
-        public string? ClassName { get; set; } 
+        public string? ClassName { get; set; }
+        public int? LogId { get; set; }
     }
 }

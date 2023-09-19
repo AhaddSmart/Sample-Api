@@ -18,6 +18,15 @@ public class AboutController : ApiControllerBase
     [Route("v1/[controller]")]
     public async Task<ResponseHelper> Get()
     {
+        try
+        {
+            string abc = "abc";
+            int xyz = Convert.ToInt32(abc);
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
         return await Mediator.Send(new GetAboutQuery());
     }
     [HttpGet]
@@ -38,11 +47,11 @@ public class AboutController : ApiControllerBase
     {
         if (id != command.Id)
         {
-             throw new NotFoundException("About entity not found."); ;
+            throw new NotFoundException("About entity not found."); ;
         }
 
         return await Mediator.Send(command);
-        
+
     }
 
     //[HttpDelete("v1/[controller]/{id}")]

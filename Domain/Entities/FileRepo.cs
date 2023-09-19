@@ -24,7 +24,7 @@ namespace Domain.Entities
         public int filePosition { get; set; }
 
         [Column("TableRef")]
-        public FileRepositoryTableRef? TabelRef { get; set; }
+        public FileRepositoryTableRef? TableRef { get; set; }
 
         [Column("TableRefID")]
         public int tableRefID { get; set; }

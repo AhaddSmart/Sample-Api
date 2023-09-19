@@ -26,12 +26,15 @@ namespace Application.DTOs.VenderDtos
         public string email { get; set; }
         public string? mobileNo { get; set; }
         public string? website { get; set; }
-        public string? mobileNos { get; set; }
-        public string? emails { get; set; }
+        public string[]? mobileNos { get; set; }
+        public string[]? emails { get; set; }
 
         public void Mapping(MappingProfile profile)
         {
-            profile.CreateMap<Vendor, VendorDto>().ForMember(x => x.logoPath, y => y.MapFrom(z => z.logoRepo != null ? z.logoRepo.filePath : ""));
+            profile.CreateMap<Vendor, VendorDto>()
+                .ForMember(x => x.logoPath, y => y.MapFrom(z => z.logoRepo != null ? z.logoRepo.filePath : ""))
+                .ForMember(x => x.mobileNos, y => y.MapFrom(z => z.mobileNos != null ? z.mobileNos.Split(" | ", StringSplitOptions.None) : null))
+                .ForMember(x => x.emails, y => y.MapFrom(z => z.emails != null ? z.emails.Split(" | ", StringSplitOptions.None) : null));
         }
     }
 }

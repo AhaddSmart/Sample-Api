@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230919125316_addingLogIdInLogExceptionEntity")]
+    partial class addingLogIdInLogExceptionEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -329,7 +331,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("RequestTime");
 
-                    b.Property<DateTime?>("responseTime")
+                    b.Property<DateTime>("responseTime")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("ResponseTime");
 

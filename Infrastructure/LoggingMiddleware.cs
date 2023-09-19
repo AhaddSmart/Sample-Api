@@ -1,6 +1,8 @@
 ﻿using Domain.Entities;
 using Infrastructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic;
 using System;
@@ -25,13 +27,14 @@ public class LoggingMiddleware
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             DateTime requestTime = DateTime.UtcNow;
+            
 
             // Log request information before processing
             var requestLogEntry = new LogEntry
             {
                 logLevel = "Information",
                 message = $"Request: {context.Request.Method} {context.Request.Path}",
-                //Timestamp = DateTime.UtcNow
+                requestTime = DateTime.UtcNow,
             };
 
             //dbContext.LogEntries.Add(requestLogEntry);
@@ -41,21 +44,27 @@ public class LoggingMiddleware
             using var responseBody = new MemoryStream();
             context.Response.Body = responseBody;
 
+            var id = dbContext.LogEntries.Add(requestLogEntry);
+            context.Items["id"] = id;
+
             await _next(context);
 
             // Log response information after processing
-            var responseLogEntry = new LogEntry
-            {
-                logLevel = "Information",
-                message = $"Request: {context.Request.Method} {context.Request.Path}, Response: {context.Response.StatusCode}",
-                requestTime = requestTime,
-                responseTime = DateTime.UtcNow,
-                //Timestamp = DateTime.UtcNow
-            };
+            var entity = await dbContext.LogEntries.FindAsync(id);
+            //var responseLogEntry = new LogEntry
+            //{
+            //    logLevel = "Information",
+            //    message = $"Request: {context.Request.Method} {context.Request.Path}, Response: {context.Response.StatusCode}",
+            //    requestTime = requestTime,
+            //    responseTime = DateTime.UtcNow,
+            //    //Timestamp = DateTime.UtcNow
+            //};
+            entity.message = $"Request: {context.Request.Method} {context.Request.Path}, Response: {context.Response.StatusCode}";
+            entity.responseTime = DateTime.UtcNow;
 
             //Trace = 0, Debug = 1, Information = 2, Warning = 3, Error = 4, Critical = 5,  None = 6.
 
-            dbContext.LogEntries.Add(responseLogEntry);
+            //dbContext.LogEntries.Add(responseLogEntry);
 
             await dbContext.SaveChangesAsync();
 
@@ -65,3 +74,15 @@ public class LoggingMiddleware
         }
     }
 }
+
+//public async Task SomeOtherMiddleware(HttpContext context)
+//{
+//    // Access the additional information from the previous middleware
+//    if (context.Items.ContainsKey("AdditionalInfo"))
+//    {
+//        var additionalInfo = context.Items["AdditionalInfo"].ToString();
+//        // Now you can use the 'additionalInfo' variable as needed
+//    }
+
+//    // ... Your middleware logic ...
+//}

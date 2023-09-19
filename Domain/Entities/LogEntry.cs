@@ -18,6 +18,6 @@ namespace Domain.Entities
         [Column("RequestTime")]
         public DateTime requestTime { get; set; }
         [Column("ResponseTime")]
-        public DateTime responseTime { get; set; }
+        public DateTime? responseTime { get; set; }
     }
 }
