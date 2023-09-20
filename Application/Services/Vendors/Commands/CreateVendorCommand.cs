@@ -71,7 +71,6 @@ public class CreateVendorCommandHandler : IRequestHandler<CreateVendorCommand, R
 
             ImageRepositoryHelper imageRepositoryHelper = new(_context);
 
-            //IFormFile File = request.formRequest.Form.Files.Count() > 0 ? request.formRequest.Form.Files[0] : null;
             if (request.formRequest.Form.Files.Count() > 0)
             {
                 for (int i = 0; i < request.formRequest.Form.Files.Count(); i++)
@@ -112,11 +111,9 @@ public class CreateVendorCommandHandler : IRequestHandler<CreateVendorCommand, R
             
             await _context.SaveChangesAsync(cancellationToken);
 
-            //var result = _mapper.Map<CreateVendorDto>(entity);
             var result = new { Id = entity.Id };
             return new ResponseHelper(1, result, new ErrorDef(0, string.Empty, string.Empty));
 
-            //return new ResponseHelper(0, new object(), new ErrorDef(-1, @"Error", "to date must greater then from date", @"error"));
         }
         catch (Exception ex)
         {

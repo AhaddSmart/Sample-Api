@@ -8,6 +8,7 @@ using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 public class LoggingMiddleware
@@ -27,7 +28,6 @@ public class LoggingMiddleware
         {
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             DateTime requestTime = DateTime.UtcNow;
-            
 
             // Log request information before processing
             var requestLogEntry = new LogEntry
@@ -37,34 +37,26 @@ public class LoggingMiddleware
                 requestTime = DateTime.UtcNow,
             };
 
-            //dbContext.LogEntries.Add(requestLogEntry);
-
             // Capture the response status code
             var originalBodyStream = context.Response.Body;
             using var responseBody = new MemoryStream();
             context.Response.Body = responseBody;
 
-            var id = dbContext.LogEntries.Add(requestLogEntry);
-            context.Items["id"] = id;
+            await dbContext.LogEntries.AddAsync(requestLogEntry);
+            await dbContext.SaveChangesAsync();
+
+            int id = requestLogEntry.Id;
+            context.Items["id"] = requestLogEntry.Id;
 
             await _next(context);
 
             // Log response information after processing
             var entity = await dbContext.LogEntries.FindAsync(id);
-            //var responseLogEntry = new LogEntry
-            //{
-            //    logLevel = "Information",
-            //    message = $"Request: {context.Request.Method} {context.Request.Path}, Response: {context.Response.StatusCode}",
-            //    requestTime = requestTime,
-            //    responseTime = DateTime.UtcNow,
-            //    //Timestamp = DateTime.UtcNow
-            //};
             entity.message = $"Request: {context.Request.Method} {context.Request.Path}, Response: {context.Response.StatusCode}";
             entity.responseTime = DateTime.UtcNow;
 
             //Trace = 0, Debug = 1, Information = 2, Warning = 3, Error = 4, Critical = 5,  None = 6.
 
-            //dbContext.LogEntries.Add(responseLogEntry);
 
             await dbContext.SaveChangesAsync();
 
@@ -75,14 +67,3 @@ public class LoggingMiddleware
     }
 }
 
-//public async Task SomeOtherMiddleware(HttpContext context)
-//{
-//    // Access the additional information from the previous middleware
-//    if (context.Items.ContainsKey("AdditionalInfo"))
-//    {
-//        var additionalInfo = context.Items["AdditionalInfo"].ToString();
-//        // Now you can use the 'additionalInfo' variable as needed
-//    }
-
-//    // ... Your middleware logic ...
-//}

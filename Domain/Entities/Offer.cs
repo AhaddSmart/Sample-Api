@@ -13,6 +13,10 @@ namespace Domain.Entities
     {
         [Column("Title")]
         public string title { get; set; }
+        [Column("VendorId")]
+        public int? vendorId { get; set; }
+        public virtual Vendor? vendor { get; set; }
+
         [Column("FileRepoId")]
         public int? fileRepoId { get; set; }
         public virtual FileRepo? fileRepo { get; set; }

@@ -42,6 +42,7 @@ public class CreateOfferCommandHandler : IRequestHandler<CreateOfferCommand, Res
             if (objCreateOfferDto.to > objCreateOfferDto.from) {
                 var entity = new Domain.Entities.Offer
                 {
+                    vendorId = objCreateOfferDto.vendorId,
                     title = objCreateOfferDto.title,
                     from = objCreateOfferDto.from,
                     to = objCreateOfferDto.to,

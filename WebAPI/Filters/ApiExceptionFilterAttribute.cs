@@ -3,10 +3,12 @@ using Application.Common.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using System.Threading;
 
 namespace WebUI.Filters;
 
@@ -131,6 +133,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 
     private void HandleUnknownException(ExceptionContext context)
     {
+        
         var details = new ProblemDetails
         {
             Status = StatusCodes.Status500InternalServerError,
@@ -138,8 +141,8 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
         };
         Console.WriteLine(context.HttpContext.Items["id"].ToString());
-        var id = Convert.ToInt32(context.HttpContext.Items["id"].ToString());
-        Console.WriteLine("log id"+id);
+        int id = (int)context.HttpContext.Items["id"];
+        Console.WriteLine("log id : " + id);
         LogException(context.Exception, id);
 
         context.Result = new ObjectResult(details)

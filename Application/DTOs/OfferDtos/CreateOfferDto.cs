@@ -12,6 +12,7 @@ public class CreateVenderDto : IMapFrom<Offer>
 {
     public string title { get; set; }
     //public int fileRepoId { get; set; }
+    public int? vendorId { get; set; }
     public DateTime from { get; set; }
     public DateTime to { get; set; }
     public string? path { get; set; }

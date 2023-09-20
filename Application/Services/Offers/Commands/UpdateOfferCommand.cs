@@ -49,6 +49,7 @@ public class UpdateOfferCommandHandler : IRequestHandler<UpdateOfferCommand, Res
 
                 entity.title = objUpdateOfferDto.title;
                 //entity.fileRepoId = objUpdateOfferDto.fileRepoId;
+                entity.vendorId = objUpdateOfferDto.vendorId;
                 entity.from = objUpdateOfferDto.from;
                 entity.to = objUpdateOfferDto.to;
 

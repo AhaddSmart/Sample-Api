@@ -12,6 +12,7 @@ public class UpdateOfferDto : IMapFrom<Offer>
 {
     public int Id { get; set; }
     public string title { get; set; }
+    public int? vendorId { get; set; }
     public int fileRepoId { get; set; }
     public DateTime from { get; set; }
     public DateTime to { get; set; }
