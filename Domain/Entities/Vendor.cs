@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Domain.Helper;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
+    [CreateService(false)]
     public class Vendor : BaseEntity<int>
     {
         [Column("LogoId")]

@@ -16,6 +16,7 @@ namespace Application.Common.Interfaces
         DbSet<BusinessType> BusinessTypes{ get; }
         DbSet<LogEntry> LogEntries { get; }
         DbSet<ExceptionLog> ExceptionLogs { get; }
+        DbSet<Enquiry> Enquiries { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

@@ -39,6 +39,7 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
     public DbSet<BusinessType> BusinessTypes => Set<BusinessType>();
     public DbSet<LogEntry> LogEntries => Set<LogEntry>();
     public DbSet<ExceptionLog> ExceptionLogs => Set<ExceptionLog>();
+    public DbSet<Enquiry> Enquiries => Set<Enquiry>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

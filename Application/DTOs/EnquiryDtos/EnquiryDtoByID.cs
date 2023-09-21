@@ -1,0 +1,30 @@
+
+using System;
+using Application.Common.Mappings;
+using Domain.Entities;
+using AutoMapper;
+using Domain.Enums;
+using System.Reflection.Metadata;
+
+
+namespace Application.DTOs.EnquiryDtos
+{
+    public class EnquiryDtoByID : IMapFrom<Enquiry>
+    {
+        public int Id { get; set; }
+        public string title { get; set; }
+        public int businessTypeId { get; set; }
+        public BusinessType? businessType { get; set; }
+        public string loadingPortCountry { get; set; }
+        public string loadingPortCity { get; set; }
+        public string unloadingPortCountry { get; set; }
+        public string unloadingPortCity { get; set; }
+        public string detail { get; set; }
+
+    public void Mapping(MappingProfile profile)
+    {
+        profile.CreateMap<Enquiry, EnquiryDtoByID>();
+    }
+}
+ }
+            
